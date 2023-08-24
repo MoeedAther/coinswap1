@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>File Upload Example</title>
+</head>
+
+<body>
+    <input type="file" id="fileInput" />
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const filePath = URL.createObjectURL(file);
+            console.log('File Path:', filePath);
+        });
+    </script>
+</body>
+
+</html>
