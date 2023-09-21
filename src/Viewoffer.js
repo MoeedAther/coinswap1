@@ -639,7 +639,7 @@ export default function Viewoffer() {
                     type="text"
                     className="in myin2"
                     value={getval}
-                    style={{ color: "rgb(167 148 165)" }}
+                    style={{ color: "white" }}
                     disabled
                   />
                 )}
@@ -946,7 +946,7 @@ export default function Viewoffer() {
               </div>
 
               <div className="text-white">
-                <p>
+                <p className="fixedRateMode">
                   Coinoswap provides an option for fixed rates as well as
                   floating rates. To select and activate fixed rate mode click
                   on the lock inside the exchange crypto box. Fixed rate mode

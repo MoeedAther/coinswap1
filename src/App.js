@@ -18,6 +18,7 @@ import FAQPage from './Faq2';
 
 import Works from './Works';
 import Contactus from './Contactus';
+// import Copy from './Copy';
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
             <Route exact path="/Faqs" element={[<Navbarr/>, <FAQPage />, <Footer />]} />
             <Route exact path="/works" element={[<Navbarr/>, <Works />, <Footer />]} />
             <Route exact path="/contactus" element={[<Navbarr/>, <Contactus />, <Footer />]} />
+
+            {/* <Route exact path="/copy" element={[<Navbarr/>, <Copy />, <Footer />]} /> */}
           </Routes>
            
       </Router>

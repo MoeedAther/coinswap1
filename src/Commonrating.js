@@ -21,8 +21,11 @@ export default function Commonrating(props){
   const { lockShow, handleComponentToggle } = props;
 
     let {sortedArray}=props
+    
+    
 
     const [components, setComponents] = useState([]);
+    const [time, setTime] = useState(1);
 
 
     const getComponent1 = (name) => {
@@ -105,9 +108,13 @@ export default function Commonrating(props){
 
     <div>
 
-       {sortedArray.map((component, index) => {
-        const Component = lockShow === 1 ? getComponent2(component.name) : getComponent1(component.name) 
-        return <Component key={index} rate={component.value} EET={component.eet} bestratetxt={index==0?"block":"none"} lockShow={lockShow} />; 
+      {sortedArray.map((component, index) => {
+        const Component = lockShow === 1 ? getComponent2(component.name) : getComponent1(component.name);
+        console.log("EET value:", component.eet);
+        return(
+         <Component key={index} rate={component.value} EET={component.eet} bestratetxt={index==0?"block":"none"} lockShow={lockShow} />
+         ); 
+        
       })}
       
     </div>

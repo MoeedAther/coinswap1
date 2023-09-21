@@ -159,7 +159,7 @@ function Home() {
                 <img src={payments} alt="" />
               </Col>
 
-              <Col sm={6} lg={3} style={{ textAlign: "end" }}>
+              <Col sm={6} lg={3} className="truscol" style={{ textAlign: "end" }}>
                 <p className="margin-left-10 color-white mb-0">
                   Check out Coinoswap on
                 </p>

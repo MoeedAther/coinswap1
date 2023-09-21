@@ -16,6 +16,7 @@ export default function FastestSwap(props){
     let {sortedArray}=props
 
     const [components, setComponents] = useState([]); 
+    const [time, setTime] = useState(1); 
 
     // const getComponent = (name) => {
     //         switch (name) {

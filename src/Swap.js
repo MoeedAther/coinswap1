@@ -8,6 +8,9 @@ import { useDispatch } from 'react-redux'
 import {set_recipient_wallet_address, set_sending_wallet_address, set_transaction_id, set_exchangename} from "./features/offerSlice";
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const URL=process.env.REACT_APP_URL
 
 
@@ -32,6 +35,11 @@ function Swap() {
     const changehero_fixed_rateid = useSelector(state => state.offer.changehero_fixed_rateid)
     const stealthio_fixed_rateid = useSelector(state => state.offer.stealthio_fixed_rateid)
     const changelly_fixed_rateid = useSelector(state => state.offer.changelly_fixed_rateid)
+
+
+    // State to control the modal visibility
+    const [showErrorModal, setShowErrorModal] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('');
 
 
     dispatch(set_recipient_wallet_address(recepientAdd))
@@ -147,6 +155,12 @@ function Swap() {
     const  checkdata = async (e)=>{
         e.preventDefault();
 
+        if(recepientAdd == null && refAdd == null &&  email == null){
+          setErrorMessage('Fill in all required fields.'); 
+          setShowErrorModal(true);
+          
+        }else{
+
         switch (currexchangename) {
             case "Changelly":
               setName("Changelly")
@@ -194,6 +208,9 @@ function Swap() {
 
             if(data3.result.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
                                           
             break;
@@ -229,10 +246,13 @@ function Swap() {
             dispatch(set_transaction_id(data4.result.id))
             dispatch(set_sending_wallet_address(data4.result.payinAddress))
             console.log(data4.result.id)
-            console.log(data4.result.payinAddress)
+            console.log(data4.result.payinAddress);
 
             if(data4.result.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -272,6 +292,9 @@ function Swap() {
 
             if(data5.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -311,6 +334,9 @@ function Swap() {
 
             if(data6.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -350,6 +376,9 @@ function Swap() {
 
             if(data7.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -382,10 +411,17 @@ function Swap() {
 
             console.log(data8)
             dispatch(set_transaction_id(data8.id))
-            dispatch(set_sending_wallet_address(data8.payinAddress))
+            dispatch(set_sending_wallet_address(data8.payinAddress));
 
             console.log(data8.id)
             console.log(data8.payinAddress)
+
+            if(data8.id){
+              navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
+            }
 
             break;
 
@@ -402,7 +438,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:""                  
-        }
+              }
                       
             const options9={
               method:"POST",
@@ -416,10 +452,13 @@ function Swap() {
             const data9=await response9.json()
 
             dispatch(set_transaction_id(data9.id))
-            dispatch(set_sending_wallet_address(data9.depositAddress))
+            dispatch(set_sending_wallet_address(data9.depositAddress));
 
             if(data9.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
             
 
@@ -454,10 +493,13 @@ function Swap() {
             dispatch(set_transaction_id(data10.id))
             dispatch(set_sending_wallet_address(data10.depositAddress))
             console.log(data10.id)
-            console.log(data10.depositAddress)
+            console.log(data10.depositAddress);
 
             if(data10.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -491,10 +533,13 @@ function Swap() {
             dispatch(set_transaction_id(data11.transaction_id))
             dispatch(set_sending_wallet_address(data11.deposit))
             console.log(data11.transaction_id)
-            console.log(data11.deposit)
+            console.log(data11.deposit);
 
             if(data11.transaction_id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -530,10 +575,19 @@ function Swap() {
             dispatch(set_transaction_id(data12.transaction_id))
             dispatch(set_sending_wallet_address(data12.deposit))
             console.log(data12.transaction_id)
-            console.log(data12.deposit)
+            console.log(data12.deposit);
+
+            if (response12.status === 500) { 
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
+              return;
+            }
 
             if(data12.transaction_id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -569,10 +623,13 @@ function Swap() {
             dispatch(set_transaction_id(data13.transaction_id))
             dispatch(set_sending_wallet_address(data13.deposit))
             console.log(data13.transaction_id)
-            console.log(data13.deposit)
+            console.log(data13.deposit);
 
             if(data13.transaction_id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
@@ -612,6 +669,9 @@ function Swap() {
 
             if(data14.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
             
             break;
@@ -646,34 +706,47 @@ function Swap() {
 
             dispatch(set_transaction_id(data15.id))
             dispatch(set_sending_wallet_address(data15.address_from))
-            console.log(data15.id)
-            console.log(data15.address_from)
+            console.log(data15.id);
+            console.log(data15.address_from);
             
             if(data15.id){
               navigate("/swaptwo")
+            }else{
+              setErrorMessage('An error occurred. Please try again later.'); 
+              setShowErrorModal(true);
             }
 
             break;
 
             default:
-                console.log("This")
+                console.log("This filter error");
+                  setErrorMessage('Default Case'); 
+                  setShowErrorModal(true);
             break;
         }
+      }
 
     }
+
+
     return (
         <>
             <section>
                 <Common />
                 <div className='container-fluid nav-bg'>
                     <div className='row mt-4'>
-                        <div className='col-10 mx-auto change'>
+                      <div className='col-lg-1 col-md-1 d-lg-block d-md-block d-none arrow-back'>
+                        <a href='/viewoffer'>
+                          <i className="fa-solid fa-arrow-left" style={{color: "white", float: "right", fontSize:"24px"}}></i>
+                        </a>
+                      </div>
+                        <div className='col-lg-10 mx-auto change'>
                             <div className='price col-md-2 col-lg-2'>
                                 <span className='d-block'>You Send:</span>
                                 <div className='d-flex'>
                                     <img src={pict} alt="mypic" width={"20px"} height={"25px"} />
                                     <h3>{amountcur} <span>{selcur.toUpperCase()}</span></h3>
-                                    <span className='dash d-none d-lg-block ml-auto'> - </span>
+                                    <span className='dash d-none d-lg-block ml-auto'> to </span>
                                 </div>
                             </div>
 
@@ -681,7 +754,7 @@ function Swap() {
                                 <span className='d-block'>You get:</span>
                                 <div className='d-flex'>
                                     <img src={picture} alt="mypic" width={"20px"} height={"25px"} />
-                                    <h3>~ {amount_to} <span>{getcur.toUpperCase()}</span><span className='s-chnage-in'>VIA</span><span className='v-ch'>{name}</span></h3>
+                                    <h3> {amount_to} <span>{getcur.toUpperCase()}</span><span className='s-chnage-in'>VIA</span><span className='v-ch'>{name}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -689,10 +762,10 @@ function Swap() {
                 </div>
                 <div className='container-fluid nav-bg'>
                     <div className='row mb-5'>
-                        <div className='col-10 mx-auto d-flex recieve-info'>
+                        <div className='col-lg-10 mx-auto d-flex recieve-info'>
                             <div className='col-lg-6 col-md-12 col-sm-12 col-xs-12'>
-                                <form>
-                                    <div class="form-group">
+                                <form class="swap-form">
+                                    <div class="form-group pt-3">
                                         <label for="exampleInputPassword1">Wallet address to recieve {getcur.toUpperCase()} (required)</label>
                                         <textarea type="text" class="form-control text-white" id="exampleInputPassword1" placeholder="Recipient wallet address" onChange={(e) => {set_recepientAdd(e.target.value)}} />
                                     </div>
@@ -704,7 +777,7 @@ function Swap() {
                                         <label className='mail-info' for="exampleInputEmail1">Leave your email address to get notified when your exchange is completed(optional)</label>
                                         <input type="email" class="form-control text-white" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email address" onChange={(e) => { setEmail(e.target.value) }} />
                                     </div>
-                                    <div className='d-flex accept'>
+                                    <div className='d-flex accept' >
                                         <div class="form-check mr-2">
                                             <input type="checkbox" class="form-check-input" id="exampleCheck1" />
                                             <label class="form-check-label mail-info text-white" for="exampleCheck1">I have read and accept the Terms of Use and Privacy Policy</label>
@@ -717,10 +790,12 @@ function Swap() {
                             </div>
                             <div className='col-lg-6 col-md-12 col-sm-12 col-xs-12'>
                                 <div className='procedure-col'>
-                                    <h3><span>Type:</span>~ {type}</h3>
-                                    <ol>
-                                        <li>Provide your recipient wallet address where to recieve your funds</li>
-                                        <li>Enter your refund wallet address</li>
+                                    <h3><span style={{paddingRight:'5px'}}>Type: </span> {type}
+                                    <i className="fa-solid fa-lock" style={{fontSize: "14px", position: "inherit"}}></i>
+                                    </h3>
+                                    <ol style={{marginTop:'30px'}}>
+                                        <li> Provide your recipient wallet address where to recieve your funds</li>
+                                        <li> Enter your refund wallet address</li>
                                         <li>Enter your email address to recieve your order tracker ID and updates of your transaction</li>
                                     </ol>
                                 </div>
@@ -729,6 +804,30 @@ function Swap() {
                     </div>
                 </div>
             </section>
+
+
+            {/* Modal for showing error */}
+              <div className={`modal fade ${showErrorModal ? 'show' : ''}`} tabIndex="-1" style={{ display: showErrorModal ? 'block' : 'none' }}>
+                <div className="modal-dialog modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            {/* <h5 className="modal-title">Error</h5> */}
+                            <button type="button" className="close" onClick={() => setShowErrorModal(false)} style={{width:'auto'}}>
+                                <span aria-hidden="true" className='xmark-btn'>&times;</span>
+                            </button>
+                        </div>
+                        <div className="modal-body text-center pb-5 mb-5">
+                            <i className="fa-regular fa-circle-xmark me-3" style={{fontSize:"32px"}}></i>
+                            <span style={{fontSize:"32px", fontWeight:'700'}}>Error</span>
+                            <span style={{display:'block'}}>{errorMessage}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={`modal-backdrop fade ${showErrorModal ? 'show' : ''}`} style={{ display: showErrorModal ? 'block' : 'none' }}></div>
+
+
+
         </>
     );
 };

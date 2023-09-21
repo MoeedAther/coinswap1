@@ -416,7 +416,7 @@ function FAQPage() {
     </div>
 
 
-    <div className='col-lg-4 col-md-4 col-xs-12 col-sm-12'>
+    <div className='col-lg-4 col-md-4 col-xs-12 col-sm-12 d-md-block d-lg-block d-none'>
       <FAQBox handleScrollToSection={handleScrollToSection} />
     </div>
 

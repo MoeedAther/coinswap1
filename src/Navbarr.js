@@ -96,7 +96,7 @@ function Navbarr() {
     sortbyeta: "Fastest Swap",
     sortbyrating: "Best Rating",
     content: "Coinoswap provides you with exchange options from the swap services and exchanges we partner with. If our partners’ rules contain extra requirements, such as KYC procedure or floating rate, we obey them. Be careful and read the selected partner's terms before you start an exchange.",
-    yousent: "You sent",
+    yousent: "You send",
     youget: "You get",
     termofuse: "Term of Use",
     privacypolicy: "Privacy Policy",

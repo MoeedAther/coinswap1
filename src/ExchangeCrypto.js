@@ -541,7 +541,7 @@ function ExchangeCrypto(props) {
                     type="text"
                     className="in myin2"
                     value={getval}
-                    style={{ color: "rgb(167 148 165)" }}
+                    style={{ color: "white" }}
                     disabled></input>
                 )}
                 <div

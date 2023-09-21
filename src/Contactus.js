@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { Carousel, Col, Container, Row, Card } from 'react-bootstrap';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,9 +8,26 @@ import logo2 from './slide3.png'
 import cardimg from './bg-img.jpg'
 import cardimg1 from './bg-img2.jpg'
 import rec from './images/rechap.png';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 function Contactus() {
+
+    const [copied, setCopied] = useState(false);
+    const textToCopy = 'pr@coinoswap.com';
+
+    const [copied2, setCopied2] = useState(false);
+    const textToCopy2 = 'support@coinoswap.com';
+  
+    const handleCopy = () => {
+      setTimeout(() => setCopied(false), 3000); 
+    };
+
+    const handleCopy2 = () => {
+        setTimeout(() => setCopied2(false), 3000); 
+    };
+
+
     return (
      
 
@@ -20,7 +37,7 @@ function Contactus() {
 
                 <div className="row pb-5 pt-5">
                     <h1 className="mb-4" style={{color:"#fff",fontSize:"30px"}}>Contact Us</h1>
-                    <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                         
 
                         <form className="contact-form">
@@ -66,11 +83,25 @@ function Contactus() {
 
 
                     </div>
-                    <div className="col-lg-6 col-md-6 col-sm-12 col-xs-12 socail-in">
+                    <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12 socail-in">
                         <p>PR & MARKETING:</p>
-                        <h2>pr@coinoswap.com <i class="fa-solid fa-clone" style={{fontSize:"18px",cursor:"pointer",color:"#7D6831"}}></i></h2>
+
+
+                        <h2>
+                            <span style={{marginRight:'10px'}}>pr@coinoswap.com</span>
+                            <CopyToClipboard text={textToCopy} onCopy={()=> setCopied(true)}>
+                                <i className="fa-solid fa-clone" style={{fontSize:"18px",cursor:"pointer",color:"#7D6831"}} onClick={handleCopy}></i>
+                            </CopyToClipboard>
+                            {copied && <span style={{color:"#B0B0B0", fontSize: "14px", marginLeft:'10px'}}>Copied!</span>}
+                        </h2>
                         <p>SUPPORT:</p>
-                        <h2>support@coinoswap.com <i class="fa-solid fa-clone" style={{fontSize:"18px",cursor:"pointer",color:"#7D6831"}}></i></h2>
+                        <h2>
+                            <span style={{marginRight:'10px'}}>support@coinoswap.com</span> 
+                            <CopyToClipboard text={textToCopy2} onCopy={()=> setCopied2(true)}>
+                                <i className="fa-solid fa-clone" style={{fontSize:"18px",cursor:"pointer",color:"#7D6831"}} onClick={handleCopy2}></i>
+                            </CopyToClipboard>
+                            {copied2 && <span style={{color:"#B0B0B0", fontSize: "14px", marginLeft:'10px'}}>Copied!</span>}
+                        </h2>
                         <p>FOLLOW US:</p>
                         <div className="pt-3">
                             <i class="fa-brands fa-facebook"></i>
