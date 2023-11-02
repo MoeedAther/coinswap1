@@ -13,6 +13,7 @@ export default function Commonbestrate6_fixed(props){
     const handleClick=()=>{
         dispatch(set_exchangename("Changenow_fixed"));
         dispatch(set_amount_to(props.rate));
+        window.scrollTo(0, 0);
         navigate("/swap");
     }
     return(
@@ -55,7 +56,7 @@ export default function Commonbestrate6_fixed(props){
                                                         </div>
                                                         <div className="d-f ai-c"><div className="step1-field__value step1-table-union__eta">
                                                            
-                                                            {props.EET}
+                                                            {/* {props.EET} */} 10-60 min
                                                         </div>
                                                         </div>
                                                     </div>
@@ -292,7 +293,11 @@ export default function Commonbestrate6_fixed(props){
                                                 </div>
                                             </div>
                                             <div data-v-4860c0fa="" className="step1-table__exchange">
-                                            <div data-v-76d55f6e="" data-v-4860c0fa="" style={{display:props.bestratetxt}} className="step1-tag step1-table__tag step1-tag__top">
+                                           
+                                                <div data-v-76d55f6e="" data-v-4860c0fa="" style={{display: lockShow == 1? 'block': 'none'}} className="step1-tag step1-table__tag step1-tag__top">
+                                                    Best Rate
+                                                </div>
+                                                <div data-v-76d55f6e="" data-v-4860c0fa="" style={{display:props.bestratetxt}} className="step1-tag step1-table__tag step1-tag__top">
                                                     Best Rate
                                                 </div>
                                                 <button data-v-3411e120="" onClick={handleClick} data-v-4860c0fa="" type="button" className="button step1-table__button button_sm button_primary button_none top-rate-button">

@@ -12,6 +12,7 @@ export default function Commonbestrate3_fixed(props){
     const handleClick=()=>{
         dispatch(set_exchangename("Changehero_fixed"));
         dispatch(set_amount_to(props.rate));
+        window.scrollTo(0, 0);
         navigate("/swap");
     }
     return(
@@ -53,7 +54,7 @@ export default function Commonbestrate3_fixed(props){
                                                         </div>
                                                         <div className="d-f ai-c">
                                                             <div className="step1-field__value step1-table-union__eta tpm">
-                                                                {props.EET}
+                                                                {/* {props.EET} */}12-26 min
                                                             </div>
                                                         </div>
                                                     </div>

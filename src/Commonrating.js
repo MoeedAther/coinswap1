@@ -16,16 +16,14 @@ import Commonbestrate7 from "./CommonbestrateSeven";
 import Commonbestrate7_fixed from "./Commonbestrate7_fixed";
 import Commonbestrate8 from "./CommonbestrateEight";
 import Commonbestrate8_fixed from "./Commonbestrate8_fixed";
+import Commonbestrate9 from "./CommonbestrateNine";
+import Commonbestrate9_fixed from "./Commonbestrate9_fixed";
+
 
 export default function Commonrating(props){
   const { lockShow, handleComponentToggle } = props;
 
     let {sortedArray}=props
-    
-    
-
-    const [components, setComponents] = useState([]);
-    const [time, setTime] = useState(1);
 
 
     const getComponent1 = (name) => {
@@ -74,6 +72,12 @@ export default function Commonrating(props){
 
         case 'simpleswap_fixed':
           return Commonbestrate5_fixed;
+      
+        case 'fixedfloat':
+          return Commonbestrate9;
+
+        case 'fixedfloat_fixed':
+          return Commonbestrate9_fixed;
           
         default:
           return "that";
@@ -98,6 +102,8 @@ export default function Commonrating(props){
             return Commonbestrate8_fixed;
           case 'simpleswap_fixed':
             return Commonbestrate5_fixed;
+          case 'fixedfloat_fixed':
+            return Commonbestrate9_fixed;
         default:
           return "this";
       }
@@ -108,7 +114,8 @@ export default function Commonrating(props){
 
     <div>
 
-      {sortedArray.map((component, index) => {
+      {
+      sortedArray==undefined?<></>:sortedArray.map((component, index) => {
         const Component = lockShow === 1 ? getComponent2(component.name) : getComponent1(component.name);
         console.log("EET value:", component.eet);
         return(

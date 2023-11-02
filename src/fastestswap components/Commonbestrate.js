@@ -7,9 +7,13 @@ export default function Commonbestrate1(props){
     const { lockShow } = props;
     let {name1, ratingb, ratingb2}=props
     const navigate = useNavigate();
+    const handleClick = () => {
+        window.scrollTo(0, 0);
+        navigate("/swap")
+    }
     return(
         <>
-        <div data-v-4860c0fa="" className="step1-table__row" style={props.ratingb==0 || props.ratingb==undefined?{display:"none"}:{display:"block"}}>
+        <div data-v-4860c0fa="" className="step1-table__row" style={props.ratingb2==0 || props.ratingb2==undefined?{display:"none"}:{display:"block"}}>
             <div data-v-4860c0fa="" className="d-f">
                                             <div data-v-a46bbb88="" data-v-4860c0fa="" className="row step1-table__desktop">
 
@@ -286,7 +290,7 @@ export default function Commonbestrate1(props){
                                                 </div>
                                             </div>
                                             <div data-v-4860c0fa="" className="step1-table__exchange">
-                                                <button data-v-3411e120="" data-v-4860c0fa="" onClick={()=>navigate("/swap")} type="button" className="button step1-table__button button_sm button_primary button_none top-rate-button">
+                                                <button data-v-3411e120="" data-v-4860c0fa="" onClick={handleClick} type="button" className="button step1-table__button button_sm button_primary button_none top-rate-button">
                                                     Exchange
                                                 </button>
                                             </div>

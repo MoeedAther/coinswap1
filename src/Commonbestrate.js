@@ -14,6 +14,7 @@ export default function Commonbestrate1(props) {
 
     const handleClick=()=>{
         dispatch(set_exchangename("Changelly"));
+        
         dispatch(set_amount_to(props.rate));
         navigate("/swap");
     }
@@ -56,7 +57,7 @@ export default function Commonbestrate1(props) {
                                 </div>
                                 <div className="d-f ai-c">
                                     <div className="step1-field__value step1-table-union__eta">
-                                        {props.EET}
+                                        {/* {props.EET} */}5-30 min
                                     </div>
                                 </div>
                             </div>

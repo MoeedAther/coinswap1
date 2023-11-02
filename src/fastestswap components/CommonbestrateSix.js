@@ -6,7 +6,10 @@ import { useNavigate } from 'react-router-dom';
 export default function Commonbestrate6(props){
     const navigate = useNavigate();
     const { lockShow } = props;
-
+    const handleClick = () => {
+        window.scrollTo(0, 0);
+        navigate("/swap")
+    }
     return(
         <>
         <div data-v-4860c0fa="" className="step1-table__row" style={props.changenowb2==0 || props.changenowb2==undefined?{display:"none"}:{display:"block"}}>
@@ -288,7 +291,7 @@ export default function Commonbestrate6(props){
                                             <div data-v-76d55f6e="" data-v-4860c0fa="" style={{display:props.bestratetxt}} className="step1-tag step1-table__tag step1-tag__top">
                                                     Best Rate
                                                 </div>
-                                                <button data-v-3411e120="" onClick={()=>navigate("/swap")} data-v-4860c0fa="" type="button" className="button step1-table__button button_sm button_primary button_none top-rate-button">
+                                                <button data-v-3411e120="" onClick={handleClick} data-v-4860c0fa="" type="button" className="button step1-table__button button_sm button_primary button_none top-rate-button">
                                                     Exchange
                                                 </button>
                                             </div>

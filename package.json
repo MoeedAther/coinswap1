@@ -39,8 +39,8 @@
     "react-scripts": "5.0.0",
     "react-select": "^5.6.1",
     "react-spinners": "^0.13.8",
-    "react-toast": "^1.0.3",
     "react-tsparticles": "^2.3.3",
+    "stream-browserify": "^3.0.0",
     "styled-components": "^5.3.6",
     "swiper": "^8.4.4",
     "web-vitals": "^2.1.4"

@@ -13,6 +13,7 @@ export default function Commonbestrate7_fixed(props){
     const handleClick=()=>{
         dispatch(set_exchangename("Stealthio_fixed"));
         dispatch(set_amount_to(props.rate));
+        window.scrollTo(0, 0);
         navigate("/swap");
     }
     return(
@@ -56,7 +57,7 @@ export default function Commonbestrate7_fixed(props){
                                                         <div className="d-f ai-c">
                                                             <div className="step1-field__value step1-table-union__eta">
                                                                 
-                                                                {props.EET}
+                                                                {/* {props.EET} */}7-38 min
                                                             </div>
                                                         </div>
                                                     </div>

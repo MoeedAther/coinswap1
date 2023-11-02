@@ -17,6 +17,16 @@ import { set_lang, set_langcode } from './features/offerSlice.js'
 import ReactFlagsSelect from "react-flags-select";
 import { useDispatch, useSelector } from 'react-redux'
 
+import changehero from './exchange_img/changehero-icon.png';
+import changelly from './exchange_img/changelly.svg';
+import letsexchange from './exchange_img/letsexchange.png';
+import exolix from './exchange_img/exolox-icon.png';
+import changenow from './exchange_img/changenow-icon.svg';
+import simpleswap from './exchange_img/SS_logo.svg';
+import godex from './exchange_img/godex-icon.svg';
+import stealthex from './exchange_img/stealthex-icon.png';
+
+
 // import Particles from 'react-particles-js';
 
 function Navbarr() {
@@ -25,8 +35,7 @@ function Navbarr() {
   const langcode = useSelector(state => state.offer.langcode)
   const [select, setSelect] = useState(langcode);
   const onSelect = (code) => setSelect(code);
-  const lang = useSelector(state => state.offer.lang)
-
+  const lang = useSelector(state => state.offer.lang);
 
   useEffect(() => {
     dispatch(set_langcode(select))
@@ -639,8 +648,276 @@ function Navbarr() {
   }
 
 
+  const [selectedItem, setSelectedItem] = useState('');
+  const [isDropdownOpen1, setIsDropdownOpen1] = useState(false);
+  const [transaction_id, setTransaction_id] = useState('');
+
+
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+    setIsDropdownOpen1(false);
+    // console.log("open ",isDropdownOpen1);
+  };
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+
+function exchange() {
+ 
+    switch (selectedItem) {
+      case "Changelly":
+          
+      break;
+
+      case "Changelly_fixed":
+
+      break;
+
+      case "ChangeHero":     
+
+
+        async function fetchData() {
+          const url=`${URL}transactionStatus/Changehero`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log(result.result);
+        }
+
+        fetchData();
+        
+      break;
+
+
+  //               waiting	
+  // Transaction is waiting for an incoming payment.
+
+  // confirming	
+  // We have received payin and are waiting for a certain amount of confirmations depending on incoming currency.
+
+  // exchanging	
+  // Payment was confirmed and is being exchanged.
+
+  // sending	
+  // Coins are being sent to the recipient address.
+
+  // finished	
+  // Coins were successfully sent to the recipient address.
+
+  // failed	
+  // Transaction has failed. In most cases, the amount was less than the minimum. Please contact support and provide a transaction id.
+
+  // refunded	
+  // Exchange failed and coins were refunded to user's wallet. The wallet address should be provided by user.
+
+  // hold	
+  // Due to AML/KYC procedure, exchange may be delayed.
+
+  // expired	
+  // Incoming payment was not sent within the indicated timeframe; incoming funds were not confirmed within the time frame; expected amount and received amount are different.
+ // Execute 
+
+
+
+      case "Stealthex":
+       
+
+        async function fetchStealthex() {
+          // Code to be executed at each interval
+          const url=`${URL}transactionStatus/StealthEX`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log(result.status);
+        }
+
+        fetchStealthex();
+
+      break;
+
+          // waiting,
+          // confirming, 
+          // exchanging, 
+          // sending, 
+          // finished, 
+          // failed, 
+          // refunded, 
+          // verifying
+          // Execute           
+
+
+      case "Changenow":
+
+        async function fetchChangenow() {
+          // Code to be executed at each interval
+          const url=`${URL}transactionStatus/Changenow`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log(result.status);
+        }
+
+        fetchChangenow();
+
+      break;
+
+      
+          // Transaction status:
+          // new,
+          // waiting,
+          // confirming,
+          // exchanging,
+          // sending,
+          // finished,
+          // failed,
+          // refunded,
+          // verifying              
+       // Execute 
+
+
+      case "Exolix":
+
+        async function fetchExolix() {
+         // Code to be executed at each interval
+         const url=`${URL}transactionStatus/Exolix`;
+         const options={
+           method:"POST",
+           headers:{
+             'Content-Type':'application/json'
+           },
+           body:JSON.stringify({id:transaction_id})
+         };
+         const response =await fetch(url,options)
+         const result=await response.json(response)
+         console.log(result.status);
+        }
+
+        fetchExolix();
+
+      break;
+     
+
+      case "Godex":
+
+          // wait	The exchange has just been created and it’s waiting for coins to reach the deposit wallet
+          // confirmation	The transaction appears in mempool and now it is waiting for necessary network confirmations to start.
+          // confirmed	User’s payment is confirmed, the exchange process is about to start.
+          // exchanging	The exchange process is running.
+          // sending	Currency is being sent to the recipient address.
+          // sending_confirmation	Outgoing transaction is waiting for network confirmations.
+          // success	The exchange is completed and currency is successfully sent to the recipient address.
+          // overdue	Deposit receiving time for this transaction has expired.
+          // error	Transaction has failed. In most cases, the amount was sent differs from specified one when creating the transaction.
+          // refunded	Exchange was failed and coins were refunded to user's wallet.
+        // Execute   
+        
+        async function fetchGodex() {
+          // Code to be executed at each interval
+          const url=`${URL}transactionStatus/Godex`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log("Interval code executed!");
+          console.log(result.status);
+         }
+ 
+         fetchGodex();
+
+      break;
+
+      case "Letsexchange":
+
+          // wait	The exchange has just been created and it’s waiting for coins to reach the deposit wallet
+          // confirmation	The transaction appears in mempool and now it is waiting for necessary network confirmations to start.
+          // confirmed	The user’s payment is confirmed, the exchange process is about to start.
+          // exchanging	The exchange process is running.
+          // sending	Funds are being sent to the recipient`s address.
+          // sending_confirmation	The outgoing transaction is waiting for network confirmations.
+          // success	The exchange is completed and the funds are successfully sent to the recipient’s address.
+          // aml_check_failed	The deposit was marked as risky by AML check service.
+          // overdue	The deposit receiving time for this transaction has expired.
+          // error	The transaction has failed. In most cases, the amount that was sent differs from the amount that was specified when creating the transaction.
+          // refunded	The exchange failed and the coins were refunded to the user's wallet.
+
+         // Execute 
+
+        async function fetchLetsexchange() {
+          // Code to be executed at each interval
+          const url=`${URL}transactionStatus/Letsexchange`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log(result.status);
+         }
+ 
+         fetchLetsexchange();
+
+      break;
+
+
+      case "Simpleswap":
+
+        async function fetchSimpleswap() {
+          // Code to be executed at each interval
+          const url=`${URL}transactionStatus/Simpleswap`;
+          const options={
+            method:"POST",
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body:JSON.stringify({id:transaction_id})
+          };
+          const response =await fetch(url,options)
+          const result=await response.json(response)
+          console.log(result.status);
+        }
+ 
+         fetchSimpleswap();
+
+      break;
+
+      default:
+          console.log("This")
+      break;
+  }
+
+}
+
   // BEM convention
   return (
+
+    <>
     <div className="bg-color margin-bottom-50">
 
       <Navbar className="bg-color" expand="lg">
@@ -660,21 +937,104 @@ function Navbarr() {
               <NavLink className="text-white nav-text" to="/contactus">{lang.contact}</NavLink>
               <NavLink className="text-white nav-text" to="/">{lang.affiliateprogram}</NavLink>
               <NavLink className="text-white nav-text" to="/Faqs">{lang.faq}</NavLink>
-              <NavLink className="text-white nav-text" to="/">{lang.blog}</NavLink>
-              <NavLink className="text-white nav-text" to="/">{lang.aboutus}</NavLink>
+              <NavLink className="text-white nav-text" to="/About" >{lang.aboutus}</NavLink>
 
               <NavDropdown title={lang.ordertracker} id="collasible-nav-dropdown" className="text-white nav-color d-inline-block navitem navbar2">
                 <div className="navitem navbar2" id="collasible-nav-dropdown" data-v-bc252f18="" data-v-2b84fbf9="" > 
                 <div data-v-bc252f18="" className=" swap-tracker app__swap-tracker swap-tracker_shadow">
+
+                  {/*  */}
+
+                  <NavDropdown 
+                    title={selectedItem || 'Exchange'}  
+                    id="collasible-nav-dropdown" 
+                    className="text-white nav-color d-inline-block navitem navbar2 exg_inp"
+                    // onClick={handleNavDropdownClick}
+                    onMouseLeave={() => setIsDropdownOpen1(false)}
+                    onMouseEnter={() => setIsDropdownOpen1(true)}
+                    show={isDropdownOpen1}
+                  >
+
+                    <div className="navitem navbar2 mt-0 pt-0" id="collasible-nav-dropdown" data-v-bc252f18="" data-v-2b84fbf9="" style={{display: isDropdownOpen1 ? 'block' : 'none'}} > 
+                      <div 
+                        data-v-c252f18="" 
+                        className=" app__swap-tracker swap-tracker_shadow mt-0 pt-0" 
+                        style={{height:'auto',backgroundColor:'#2B2B37', width:'192px',borderRadius:'0px', boxShadow: "0 20px 70px rgb(0 0 0 / 5%)"}}
+                      >
+                    
+                        <div data-v-cc6e0960="" data-v-bc252f18="" class="">
+                          <a class="dropdown-item" style={{color:'#fff'}} onClick={() => {handleItemClick('Changelly')}}>
+                            <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                              <img src={changelly} alt="icon" style={{width:'20px'}} />
+                            </span>
+                            Changelly
+                          </a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Exolix')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={exolix} alt="icon" style={{width:'20px'}} />
+                          </span>
+                            Exolix</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Stealthex')}}>
+                            <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={stealthex} alt="icon" style={{width:'20px'}} />
+                            </span>
+                            StealthEX</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Changenow')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={changenow} alt="icon" style={{width:'20px'}} /></span>
+                            ChangeNOW</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Simpleswap')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={simpleswap} alt="icon" style={{width:'20px'}} /></span>
+                             SimpleSwap</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('ChangeHero')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={changehero} alt="icon" style={{width:'20px'}} /></span>
+                             ChangeHero</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Godex')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={godex} alt="icon" style={{width:'20px'}} /></span>
+                             Godex</a>
+                          <a class="dropdown-item mt-2" style={{color:'#fff'}} onClick={() => {handleItemClick('Letsexchange')}}>
+                          <span className="mr-2" style={{backgroundColor: 'rgba(255, 255, 255, 0.208)',height:'auto',width:'auto',padding:'3px', borderRadius:'2px',textAlign:'center',display:'inline-flex',justifyContent:'center',alignItems:'center'}}>
+                            <img src={letsexchange} alt="icon" style={{width:'20px'}} /> </span>
+                            Letsexchange</a>
+                        </div>
+                      </div>
+                    </div>
+
+                  </NavDropdown>
+
+                  {/*  */}
+                 
                   <div data-v-cc6e0960="" data-v-bc252f18="" class="">
                   <form data-v-cc6e0960="" id="order_tracker">
                     <label data-v-249899d1="" data-v-cc6e0960="" for="VJnwu5" class="form-input swap-tracker-form__input form-input_dark form-input_md">
                       <span data-v-249899d1="" class="form-input__label"></span>
                       <span data-v-249899d1="" class="form-input__wrapper">
-                        <input data-v-249899d1="" id="VJnwu5" spellcheck="false" max="Infinity" min="-Infinity" placeholder="Enter exchange ID" step="any" trim="true" type="text" autocomplete="off" lang="en" class="form-input__input" />
+                        <input 
+                          data-v-249899d1="" 
+                          id="VJnwu5" 
+                          spellcheck="false" 
+                          max="Infinity" 
+                          min="-Infinity" 
+                          placeholder="Enter exchange ID" 
+                          step="any" 
+                          trim="true" 
+                          type="text" 
+                          autocomplete="off" 
+                          lang="en" 
+                          class="form-input__input" 
+                          value={transaction_id}
+                          onChange={(e) => setTransaction_id(e.target.value)}
+                        />
                       </span>
                     </label> 
-                    <button data-v-3411e120="" data-v-cc6e0960="" type="submit" class="button swap-tracker-form__button button_md button_primary button_uppercase button_rounded">
+                    <button 
+                      data-v-3411e120="" 
+                      data-v-cc6e0960="" 
+                      type="submit" 
+                      class="button swap-tracker-form__button button_md button_primary button_uppercase button_rounded">
                       Track your swap
                     </button>
                   </form>
@@ -683,6 +1043,10 @@ function Navbarr() {
                   </div>
 
               </NavDropdown>
+
+              {/* <button className="btn btn-primary">
+                Open Modal
+              </button> */}
 
 
             </Nav>
@@ -717,7 +1081,140 @@ function Navbarr() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+
+
+         {/* Modal for showing error */}
+         <div className={`modal fade ${showSuccessModal ? 'show' : ''}`} tabIndex="-1" style={{ display: showSuccessModal ? 'block' : 'none' }}>
+          <div className="modal-dialog modal-dialog-centered">
+              <div className="modal-content">
+                  <div className="modal-header">
+                      {/* <h5 className="modal-title">Error</h5> */}
+                      <button type="button" className="close" onClick={() => setShowSuccessModal(false)} style={{width:'auto'}}>
+                          <span aria-hidden="true" className='xmark-btn'>&times;</span>
+                      </button>
+                  </div>
+                  <div className="modal-body pb-5 mb-5">
+                    <div className="row">
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>ID: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span>exbbaf039d0d14</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Amount: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span>1</span>
+                        </p>
+                      </div>
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>AmountTo: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{}}>16.84733</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>CoinFrom: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{}}>BTC</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>CoinTo: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{width:'50%'}}>ETH</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Created At: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{width:'50%'}}>2023-10-06T08:08:33.782Z</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Deposit Address: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{fontSize:'14px'}}>bc1qumrk6djmaygj5r6g770ld7xmllarvqdxd6knx6</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Withdrawal Address: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{fontSize:'13px'}}>0x0475c792A4Aa5336881Da905932c31DB5Df2f2Fe</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Refund Address: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{fontSize:'13px'}}>1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2</span>
+                        </p>
+                      </div>
+
+                      <div className="col-lg-4">
+                        <p>
+                          <span style={{color:'#fff'}}>Rate Type: </span>
+                        </p>
+                      </div>
+                      <div className="col-lg-8">
+                        <p>
+                          <span style={{}}>Float</span>
+                        </p>
+                      </div>
+
+                    </div>
+                   
+                  </div>
+              </div>
+          </div>
+        </div>
+
+
     </div>
+    </>
   );
 }
 export default Navbarr;
+

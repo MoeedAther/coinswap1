@@ -15,7 +15,7 @@ export default function Commonbestrate2_fixed(props){
     const handleClick=()=>{
         dispatch(set_exchangename("Exolix_fixed"));
         dispatch(set_amount_to(props.rate));
-
+        window.scrollTo(0, 0);
         navigate("/swap");
     }
     return(
@@ -61,7 +61,7 @@ export default function Commonbestrate2_fixed(props){
                                                         <div className="d-f ai-c">
                                                             <div className="step1-field__value step1-table-union__eta">
                                                               
-                                                                {props.EET}
+                                                                {/* {props.EET} */}22-46 min
                                                             </div>
                                                         </div>
                                                     </div>

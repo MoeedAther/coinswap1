@@ -60,6 +60,9 @@ export const offerSlice = createSlice({
     getindex:"",
     amount_to:"",
 
+    //****************************** Coins Data ***************************//
+    coins:[],
+
     //*************************** Exchange Info ***************************//
 
     recipient_wallet_address:undefined,
@@ -80,6 +83,11 @@ export const offerSlice = createSlice({
   reducers: {
     //*************************** Exchange Info ***************************//
 
+    //****************************** Coins Data ***************************//
+    set_coins:(state, action)=>{
+      state.coins=action.payload;
+    },
+    
     set_amount_to:(state, action)=>{
       state.amount_to = action.payload;
     },

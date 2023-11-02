@@ -1,21 +1,22 @@
-
 import React, { useEffect } from 'react';
 import Common from './Common';
-import pict from "./bitcoin.png";
-import picture from "./eth.png";
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux'
 import {set_recipient_wallet_address, set_sending_wallet_address, set_transaction_id, set_exchangename} from "./features/offerSlice";
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUnlock } from "@fortawesome/free-solid-svg-icons";
+import { faLock } from "@fortawesome/free-solid-svg-icons";
+import { Link } from 'react-router-dom';
 
 const URL=process.env.REACT_APP_URL
 
 
 function Swap() {
 
+    const [spin, setSpin] = useState(false);
     const dispatch=useDispatch()
     const navigate=useNavigate()
 
@@ -25,11 +26,27 @@ function Swap() {
     const [name, setName] = useState()
     const [type, setType] = useState()
 
+    const [image1,setImage1]=useState();
+    const [image2,setImage2]=useState();
+    const [sell,setSell]=useState();
+    const [get,setGet]=useState();
+    const [selcur,setSelcur]=useState();
+    const [getcur,setGetcur]=useState();
+
+    const[showextraId, setShowExtraId] = useState(false);
+    const[extraid, setExtraId] = useState("");
+
+
+
     const currexchangename = useSelector(state => state.offer.exchangename)
-    const selcur = useSelector(state => state.offer.selcur)
-    const getcur = useSelector(state => state.offer.getcur)
     const amountcur = useSelector(state => state.offer.amountcur)
     const amount_to = useSelector(state => state.offer.amount_to)
+
+    const sendindex = localStorage.getItem("sendindex");
+    const getindex = localStorage.getItem("getindex");
+
+    // const sendindex = useSelector((state) => state.offer.sendindex);
+    // const getindex = useSelector((state) => state.offer.getindex);
 
     const changenow_fixed_rateid = useSelector(state => state.offer.changenow_fixed_rateid)
     const changehero_fixed_rateid = useSelector(state => state.offer.changehero_fixed_rateid)
@@ -47,27 +64,72 @@ function Swap() {
 
     //set exchange name and exchange type
     useEffect(()=>{
+      const symbolapifunction=async()=>{
+        const url="https://api.changenow.io/v1/currencies?active=true";
+        const options={
+          method:"GET",
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+  
+        // Api responsible for crypto icons
+        const response=await fetch(url,options)
+        const result=await response.json()
+
+        result.forEach((coin,index) => {
+          if(index==sendindex){
+            setImage1(coin.image)
+            setSell(coin.ticker.toUpperCase())
+            setSelcur(coin.ticker)
+            console.log(coin.hasExternalId)
+            if(coin.hasExternalId==true){
+              setShowExtraId(true);
+            }
+          }
+        });
+
+        result.forEach((coin,index) => {
+          if(index==getindex){
+            setImage2(coin.image)
+            setGet(coin.ticker.toUpperCase())
+            setGetcur(coin.ticker)
+          }
+        });
+      }
+      symbolapifunction()
+      
       switch (currexchangename) {
         case "Changelly":
           setName("Changelly")
+          localStorage.setItem("currexname","Changelly")
+          localStorage.setItem("exType","Floating")
           setType("Floating")
             
         break;
 
         case "Changelly_fixed":
           setName("Changelly")
+          localStorage.setItem("currexname","Changelly")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
 
         break;
 
         case "ChangeHero":
           setName("Changehero")
+          localStorage.setItem("currexname","Changehero")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
+          
               
         break;
 
         case "Changehero_fixed":
           setName("Changehero")
+          localStorage.setItem("currexname","Changehero")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
           
 
@@ -75,12 +137,18 @@ function Swap() {
 
         case "Stealthex":
           setName("Stealthex")
+          localStorage.setItem("currexname","Stealthex")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
+         
 
         break;
 
         case "Stealthio_fixed":
           setName("Stealthex")
+          localStorage.setItem("currexname","Stealthex")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
           
         
@@ -88,18 +156,28 @@ function Swap() {
 
         case "Changenow":
           setName("Changenow")
+          localStorage.setItem("currexname","Changenow")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
+          
 
         break;
 
         case "Changenow_fixed":
           setName("Changenow")
+          localStorage.setItem("currexname","Changenow")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
+          
         
         break;
 
         case "Exolix":
           setName("Exolix")
+          localStorage.setItem("currexname","Exolix")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
         
 
@@ -107,38 +185,73 @@ function Swap() {
 
         case "Exolix_fixed":
           setName("Exolix")
+          localStorage.setItem("currexname","Exolix")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
 
         break;
 
         case "Godex":
           setName("Godex")
+          localStorage.setItem("currexname","Godex")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
         
         break;
 
         case "Letsexchange":
           setName("Letsexchange")
+          localStorage.setItem("currexname","Letsexchange")
+          localStorage.setItem("exType","Floating")
+
           setType("Floating")
 
         break;
 
         case "Letsexchange_fixed":
           setName("Letsexchange")
+          localStorage.setItem("currexname","Letsexchange")
+          localStorage.setItem("exType","Fixed")
           setType("Fixed")
         
         break;
 
         case "Simpleswap":
           setName("Simpleswap")
-          setType("Floating")
-          setType("Fixed")
+          localStorage.setItem("currexname","Simpleswap")
+          localStorage.setItem("exType","Floating")
+
+          setType("Floating")         
 
         break;
 
         case "Simpleswap_fixed":
           setName("Simpleswap") 
-          setType("Fixed")       
+          localStorage.setItem("currexname","Simpleswap")
+          localStorage.setItem("exType","Fixed")
+          setType("Fixed")     
+           
+
+        break;
+
+        case "FixedFloat":
+          setName("FixedFloat") 
+          localStorage.setItem("currexname","FixedFloat")
+          localStorage.setItem("exType","Floating")
+
+          setType("Floating")     
+           
+
+        break;
+
+        case "FixedFloat_fixed":
+          setName("FixedFloat") 
+          localStorage.setItem("currexname","FixedFloat")
+          localStorage.setItem("exType","Fixed")
+
+          setType("Fixed")     
+           
 
         break;
 
@@ -155,9 +268,11 @@ function Swap() {
     const  checkdata = async (e)=>{
         e.preventDefault();
 
-        if(recepientAdd == null && refAdd == null &&  email == null){
-          setErrorMessage('Fill in all required fields.'); 
-          setShowErrorModal(true);
+        if(emailIn.trim() === '' || refundIn.trim() === '' || recepientIn.trim() === ''){
+          // setErrorMessage('Fill in all required fields.'); 
+          // setShowErrorModal(true);
+          handleEmailBlur();
+          console.log('on click function call');
           
         }else{
 
@@ -174,9 +289,9 @@ function Swap() {
             break;
 
             case "ChangeHero":
-              setName("Changehero")
+              setName("Changehero") 
                     
-            const url3 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Changehero/float"
+            const url3 = `${URL}createTransaction/Changehero/float`
 
             const params3={               
                 sell: selcur,
@@ -186,7 +301,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:"",
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options3={
@@ -207,9 +322,11 @@ function Swap() {
             console.log(data3.result.payinAddress)
 
             if(data3.result.id){
+              setSpin(true);
+              console.log(spin);
               navigate("/swaptwo")
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data3.error.message);
               setShowErrorModal(true);
             }
                                           
@@ -218,7 +335,7 @@ function Swap() {
             case "Changehero_fixed":
               setName("Changehero")
 
-            const url4 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Changehero/fixed";
+            const url4 = `${URL}createTransaction/Changehero/fixed`;
 
             const params4={               
                 sell: selcur,
@@ -228,7 +345,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:changehero_fixed_rateid,
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options4={
@@ -249,9 +366,11 @@ function Swap() {
             console.log(data4.result.payinAddress);
 
             if(data4.result.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data4.error.message); 
               setShowErrorModal(true);
             }
 
@@ -260,7 +379,7 @@ function Swap() {
             case "Stealthex":
               setName("Stealthex")
             
-            const url5 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/StealthEX/float";
+            const url5 = `${URL}createTransaction/StealthEX/float`;
 
             const params5={               
                 sell: selcur,
@@ -270,7 +389,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:changehero_fixed_rateid,
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options5={
@@ -291,9 +410,11 @@ function Swap() {
             console.log(data5.address_from)
 
             if(data5.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data5.message); 
               setShowErrorModal(true);
             }
 
@@ -302,8 +423,7 @@ function Swap() {
             case "Stealthio_fixed":
               setName("Stealthex")
             
-            const url6 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/StealthEX/fixed";
-
+            const url6 = `${URL}createTransaction/StealthEX/fixed`;
             const params6={               
                 sell: selcur,
                 get: getcur,
@@ -312,7 +432,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:stealthio_fixed_rateid,
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options6={
@@ -333,9 +453,11 @@ function Swap() {
             console.log(data6.address_from)
 
             if(data6.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data6.message);
               setShowErrorModal(true);
             }
 
@@ -344,7 +466,7 @@ function Swap() {
             case "Changenow":
               setName("Changenow")
             
-            const url7 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Changenow/float"
+            const url7 = `${URL}createTransaction/Changenow/float`;
 
             const params7={               
                 sell: selcur,
@@ -375,9 +497,11 @@ function Swap() {
             console.log(data7.payinAddress)
 
             if(data7.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data7.message); 
               setShowErrorModal(true);
             }
 
@@ -417,9 +541,11 @@ function Swap() {
             console.log(data8.payinAddress)
 
             if(data8.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data8.message); 
               setShowErrorModal(true);
             }
 
@@ -428,7 +554,7 @@ function Swap() {
             case "Exolix":
               setName("Exolix")
             
-            const url9 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Exolix/float"
+            const url9 = `${URL}createTransaction/Exolix/float`;
 
             const params9={               
                 sell: selcur,
@@ -455,19 +581,20 @@ function Swap() {
             dispatch(set_sending_wallet_address(data9.depositAddress));
 
             if(data9.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data9.message); 
               setShowErrorModal(true);
             }
             
-
             break;
 
             case "Exolix_fixed":
               setName("Exolix")
             
-            const url10 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Exolix/fixed"
+            const url10 = `${URL}createTransaction/Exolix/fixed`;
 
             const params10={               
                 sell: selcur,
@@ -496,9 +623,11 @@ function Swap() {
             console.log(data10.depositAddress);
 
             if(data10.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data10.message); 
               setShowErrorModal(true);
             }
 
@@ -507,7 +636,7 @@ function Swap() {
             case "Godex":
               setName("Godex")
             
-            const url11 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Godex/float"
+            const url11 = `${URL}createTransaction/Godex/float`;
 
             const params11={               
                 sell: selcur,
@@ -536,9 +665,11 @@ function Swap() {
             console.log(data11.deposit);
 
             if(data11.transaction_id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data11.error); 
               setShowErrorModal(true);
             }
 
@@ -547,7 +678,7 @@ function Swap() {
             case "Letsexchange":
               setName("Letsexchange")
 
-            const url12 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Letsexchange/float"
+            const url12 = `${URL}createTransaction/Letsexchange/float`;
 
             const params12={               
                 sell: selcur,
@@ -557,7 +688,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:"",
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options12={
@@ -577,16 +708,12 @@ function Swap() {
             console.log(data12.transaction_id)
             console.log(data12.deposit);
 
-            if (response12.status === 500) { 
-              setErrorMessage('An error occurred. Please try again later.'); 
-              setShowErrorModal(true);
-              return;
-            }
-
             if(data12.transaction_id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data12.error); 
               setShowErrorModal(true);
             }
 
@@ -595,7 +722,7 @@ function Swap() {
             case "Letsexchange_fixed":
               setName("Letsexchange")
             
-            const url13 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Letsexchange/fixed"
+            const url13 = `${URL}createTransaction/Letsexchange/fixed`;
 
             const params13={               
                 sell: selcur,
@@ -605,7 +732,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:"",
-                recieving_Extra_Id:"",                  
+                extraid:extraid,                  
         }
                       
             const options13={
@@ -626,9 +753,11 @@ function Swap() {
             console.log(data13.deposit);
 
             if(data13.transaction_id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data13.error); 
               setShowErrorModal(true);
             }
 
@@ -637,7 +766,7 @@ function Swap() {
             case "Simpleswap":
               setName("Simpleswap")
 
-            const url14 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Simpleswap/float"
+            const url14 = `${URL}createTransaction/Simpleswap/float`;
 
             const params14={               
                 sell: selcur,
@@ -647,7 +776,8 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:"",
-                recieving_Extra_Id:"",                  
+                extraid:extraid,
+
         }
                       
             const options14={
@@ -668,9 +798,11 @@ function Swap() {
             console.log(data14.address_from)
 
             if(data14.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data14.description); 
               setShowErrorModal(true);
             }
             
@@ -679,7 +811,7 @@ function Swap() {
             case "Simpleswap_fixed":
               setName("Simpleswap")
     
-            const url15 = "https://easy-hare-helmet.cyclic.cloud/createTransaction/Simpleswap/fixed"
+            const url15 = `${URL}createTransaction/Simpleswap/fixed`;
 
             const params15={               
                 sell: selcur,
@@ -689,7 +821,7 @@ function Swap() {
                 refund_Address: refAdd,
                 email: email,
                 rateId:"",
-                recieving_Extra_Id:"",                  
+                extraid:extraid                  
         }
                       
             const options15={
@@ -710,13 +842,100 @@ function Swap() {
             console.log(data15.address_from);
             
             if(data15.id){
-              navigate("/swaptwo")
+              setSpin(true);
+              console.log(spin);
+              navigate("/swaptwo");
             }else{
-              setErrorMessage('An error occurred. Please try again later.'); 
+              setErrorMessage(data15.description); 
               setShowErrorModal(true);
             }
-
             break;
+            
+            case "FixedFloat":
+              setName("FixedFloat")
+    
+              const url16 = `${URL}createTransaction/Fixedfloat/float`;
+  
+              const params16={               
+                  sell: selcur,
+                  get: getcur,
+                  amount: amountcur,
+                  recieving_Address: recepientAdd,
+                  refund_Address: refAdd,
+                  email: email,
+                  rateId:"",
+                  extraid:extraid                  
+          }
+                        
+              const options16={
+                method:"POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body:JSON.stringify(params16)
+              }
+            
+              const response16= await fetch(url16,options16)
+              const data16=await response16.json()
+              console.log(data16)
+  
+              dispatch(set_transaction_id(data16.id))
+              dispatch(set_sending_wallet_address(data16.address_from))
+              console.log(data16.id);
+              console.log(data16.address_from);
+              
+              if(data16.id){
+                setSpin(true);
+                console.log(spin);
+                navigate("/swaptwo");
+              }else{
+                setErrorMessage(data16.message); 
+                setShowErrorModal(true);
+              }
+              break;
+
+              case "FixedFloat_fixed":
+                setName("FixedFloat")
+      
+                const url17 = `${URL}createTransaction/Fixedfloat/fixed`;
+    
+                const params17={               
+                    sell: selcur,
+                    get: getcur,
+                    amount: amountcur,
+                    recieving_Address: recepientAdd,
+                    refund_Address: refAdd,
+                    email: email,
+                    rateId:"",
+                    extraid:extraid                  
+            }
+                          
+                const options17={
+                  method:"POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body:JSON.stringify(params17)
+                }
+              
+                const response17= await fetch(url17,options17)
+                const data17=await response17.json()
+                console.log(data17)
+    
+                dispatch(set_transaction_id(data17.id))
+                dispatch(set_sending_wallet_address(data17.address_from))
+                console.log(data17.id);
+                console.log(data17.address_from);
+                
+                if(data17.id){
+                  setSpin(true);
+                  console.log(spin);
+                  navigate("/swaptwo");
+                }else{
+                  setErrorMessage(data17.message); 
+                  setShowErrorModal(true);
+                }
+                break;
 
             default:
                 console.log("This filter error");
@@ -728,33 +947,109 @@ function Swap() {
 
     }
 
+    const [isChecked, setIsChecked] = useState(true);
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+    useEffect(() => {
+      // Get references to the checkbox and the button
+      const checkbox = document.getElementById('flexCheckChecked');
+      const proceedButton = document.getElementById('proceedButton');
+  
+      // Function to update button state and background color
+      const updateButtonState = () => {
+        const isChecked = checkbox.checked;
+        proceedButton.disabled = !isChecked;
+        setIsChecked(isChecked);
+        proceedButton.className = isChecked ? 'proceed-btn' : 'disabled-button';
+      };
+  
+      // Add an event listener to the checkbox to check its state
+      checkbox.addEventListener('change', updateButtonState);
+  
+      // Initialize the button state and background color based on the checkbox's initial state
+      updateButtonState();
+  
+      // Clean up the event listener when the component unmounts
+      return () => {
+        checkbox.removeEventListener('change', updateButtonState);
+      };
+    }, []);
+
+
+    // input validation
+
+  const [recepientIn, setRecepientIn] = useState('');
+  const [refundIn, setRefundIn] = useState('');
+  const [emailIn, setEmailIn] = useState('');
+  const [recipientErrorVisible, setRecipientErrorVisible] = useState(false);
+  const [refundErrorVisible, setRefundErrorVisible] = useState(false);
+  const [emailErrorVisible, setEmailErrorVisible] = useState(false);
+
+  const handleRecipientBlur = () => {
+    console.log('function call');
+    if (recepientIn.trim() === '') {
+      setRecipientErrorVisible(true);
+      console.log('condition true');
+    } else {
+      setRecipientErrorVisible(false);
+      console.log('condition false');
+    }
+  };
+
+  const handleRefundBlur = () => {
+     handleRecipientBlur();
+    console.log('function call');
+    if (refundIn.trim() === '') {
+      setRefundErrorVisible(true);
+      console.log('condition true');
+    } else {
+      setRefundErrorVisible(false);
+      console.log('condition false');
+    }
+  };
+
+  const handleEmailBlur = () => {
+    handleRecipientBlur();
+    handleRefundBlur();
+   console.log('function call');
+   if (emailIn.trim() === '') {
+     setEmailErrorVisible(true);
+     console.log('condition true');
+   } else {
+     setEmailErrorVisible(false);
+     console.log('condition false');
+   }
+ };
+ 
 
     return (
         <>
             <section>
-                <Common />
+                <Common confirm_wallet={spin} awating_payment={false} processing_swap={false}/>
                 <div className='container-fluid nav-bg'>
                     <div className='row mt-4'>
-                      <div className='col-lg-1 col-md-1 d-lg-block d-md-block d-none arrow-back'>
-                        <a href='/viewoffer'>
+                      <div className='col-lg-1 col-md-1 d-none d-md-block arrow-back'>
+                        <Link to="/viewoffer">
                           <i className="fa-solid fa-arrow-left" style={{color: "white", float: "right", fontSize:"24px"}}></i>
-                        </a>
+                        </Link>
                       </div>
-                        <div className='col-lg-10 mx-auto change'>
-                            <div className='price col-md-2 col-lg-2'>
+                        <div className='col-lg-10 col-md-10 change'>
+                            <div className='price col-md-4 col-lg-4'>
                                 <span className='d-block'>You Send:</span>
                                 <div className='d-flex'>
-                                    <img src={pict} alt="mypic" width={"20px"} height={"25px"} />
-                                    <h3>{amountcur} <span>{selcur.toUpperCase()}</span></h3>
-                                    <span className='dash d-none d-lg-block ml-auto'> to </span>
+
+                                    {/* img1 */}
+                                    <img src={image1} className='coins' alt="mypic" width={"30px"} height={"35px"} />
+                                    <h3>{amountcur} <span>{sell}</span></h3>
+                                    <span className='dash d-none d-lg-block mx-auto'> to </span>
                                 </div>
                             </div>
 
-                            <div className='price col-lg-6 col-md-6 col-sm-12 col-xs-12'>
+                            <div className='price col-lg-6 col-md-8 col-sm-12 col-xs-12'>
                                 <span className='d-block'>You get:</span>
                                 <div className='d-flex'>
-                                    <img src={picture} alt="mypic" width={"20px"} height={"25px"} />
-                                    <h3> {amount_to} <span>{getcur.toUpperCase()}</span><span className='s-chnage-in'>VIA</span><span className='v-ch'>{name}</span></h3>
+                                    <img src={image2} className='coins' alt="mypic" width={"30px"} height={"35px"} />
+                                    <h3> {amount_to} <span>{get}</span><span className='s-chnage-in'>VIA</span><span className='v-ch'>{localStorage.getItem("currexname")}</span></h3>
                                 </div>
                             </div>
                         </div>
@@ -766,39 +1061,91 @@ function Swap() {
                             <div className='col-lg-6 col-md-12 col-sm-12 col-xs-12'>
                                 <form class="swap-form">
                                     <div class="form-group pt-3">
-                                        <label for="exampleInputPassword1">Wallet address to recieve {getcur.toUpperCase()} (required)</label>
-                                        <textarea type="text" class="form-control text-white" id="exampleInputPassword1" placeholder="Recipient wallet address" onChange={(e) => {set_recepientAdd(e.target.value)}} />
+                                        <label for="exampleInputPassword1">Wallet address to recieve {get} (required)</label>
+                                        <textarea 
+                                          type="text" 
+                                          class="form-control text-white" 
+                                          id="exampleInputPassword1" 
+                                          placeholder="Recipient wallet address" 
+                                          onChange={(e) => {set_recepientAdd(e.target.value); setRecipientErrorVisible(false); setRecepientIn(e.target.value)}}
+
+                                        />
+                                        {recipientErrorVisible && (
+                                            <div id="recipientError" className="error-message" style={{color:'red'}}>Please enter a valid recipient address.</div>
+                                          )}
+                                    </div>
+                                    <div class="form-group" style={{display: showextraId ? 'block':'none'}}>
+                                        <label for="exampleInputPassword1">Enter the XRP Extra ID</label>
+                                        <textarea 
+                                          type="text" 
+                                          class="form-control text-white" 
+                                          id="exampleInputPassword1" 
+                                          placeholder="Extra ID" 
+                                          onChange={(e)=>{setExtraId(e.target.value)}}
+                                          />
                                     </div>
                                     <div class="form-group">
-                                        <label for="exampleInputPassword1">Wallet address to refund {selcur.toUpperCase()} (required)</label>
-                                        <textarea type="text" class="form-control text-white" id="exampleInputPassword1" placeholder="Refund wallet address" onChange={(e) => { setrefAdd(e.target.value) }} />
+                                        <label for="exampleInputPassword1">Wallet address to refund {sell} (required)</label>
+                                        <textarea 
+                                          type="text" 
+                                          class="form-control text-white" 
+                                          id="exampleInputPassword1" 
+                                          placeholder="Refund wallet address" 
+                                          onChange={(e) => { setrefAdd(e.target.value); setRefundErrorVisible(false); setRefundIn(e.target.value) }}
+                                          onFocus={handleRecipientBlur}
+                                          />
+                                          {refundErrorVisible && (
+                                            <div id="recipientError" className="error-message" style={{color:'red'}}>Please enter a valid refund address.</div>
+                                          )}
                                     </div>
                                     <div class="form-group mail-info-p">
                                         <label className='mail-info' for="exampleInputEmail1">Leave your email address to get notified when your exchange is completed(optional)</label>
-                                        <input type="email" class="form-control text-white" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email address" onChange={(e) => { setEmail(e.target.value) }} />
+                                        <input 
+                                          type="email" 
+                                          class="form-control text-white" 
+                                          id="exampleInputEmail1" 
+                                          aria-describedby="emailHelp" 
+                                          placeholder="Email address" 
+                                          onChange={(e) => { setEmail(e.target.value); setEmailErrorVisible(false); setEmailIn(e.target.value) }}
+                                          onFocus={handleRefundBlur}
+                                          />
+                                          {emailErrorVisible && (
+                                            <div id="recipientError" className="error-message" style={{color:'red'}}>Please enter a valid email address.</div>
+                                        )}
                                     </div>
                                     <div className='d-flex accept' >
-                                        <div class="form-check mr-2">
-                                            <input type="checkbox" class="form-check-input" id="exampleCheck1" />
-                                            <label class="form-check-label mail-info text-white" for="exampleCheck1">I have read and accept the Terms of Use and Privacy Policy</label>
+                                        <div class="form-check mr-2 mb-2">
+                                            <input type="checkbox" class="form-check-input" id="flexCheckChecked" defaultChecked/>
+                                            <label class="form-check-label mail-info text-white" for="flexCheckChecked">I have read and accept the Terms of Use and Privacy Policy</label>
                                         </div>
-                                        <div className='ml-auto'>
-                                            <button class="btn proceed-btn" onClick={checkdata} >PROCEED TO EXCHANGE</button>
+                                        <div className=''>
+                                            <button class="btn proceed-btn" onClick={checkdata} id="proceedButton">PROCEED TO EXCHANGE</button>
                                         </div>
                                     </div>
                                 </form>
                             </div>
                             <div className='col-lg-6 col-md-12 col-sm-12 col-xs-12'>
                                 <div className='procedure-col'>
-                                    <h3><span style={{paddingRight:'5px'}}>Type: </span> {type}
-                                    <i className="fa-solid fa-lock" style={{fontSize: "14px", position: "inherit"}}></i>
+                                    <h3><span style={{paddingRight:'5px'}}>Type: </span> {localStorage.getItem("exType")}
+                                      <FontAwesomeIcon
+                                        className="dd1 fixed_lock fixed_lock2"
+                                        icon={faLock}
+                                        style={{ color: "#996600",fontSize:'14px',display: localStorage.getItem("exType") === "Fixed" ? "inline-block" : "none" }}
+                                      />
+                                      <FontAwesomeIcon
+                                        className="dd1"
+                                        icon={faUnlock}
+                                        style={{ color: "#f4f7fa",fontSize:'14px',display: localStorage.getItem("exType") === "Floating" ? "inline-block" : "none" }}
+                                      />
                                     </h3>
                                     <ol style={{marginTop:'30px'}}>
                                         <li> Provide your recipient wallet address where to recieve your funds</li>
                                         <li> Enter your refund wallet address</li>
                                         <li>Enter your email address to recieve your order tracker ID and updates of your transaction</li>
                                     </ol>
+                                    <p className='ml-lg-4 pl-lg-3 mt-4' style={{color:"white", fontSize:'14px'}}>Click on <Link to="/works" style={{color:'rgb(190, 152, 11)'}}>"How It Works"</Link> to get a tutorial of the swap process</p>
                                 </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -826,10 +1173,9 @@ function Swap() {
             </div>
             <div className={`modal-backdrop fade ${showErrorModal ? 'show' : ''}`} style={{ display: showErrorModal ? 'block' : 'none' }}></div>
 
-
-
         </>
     );
 };
 
 export default Swap;
+

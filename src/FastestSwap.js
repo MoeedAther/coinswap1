@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Carousel, Col, Container, Row, Card } from 'react-bootstrap';
-import letsexchange from './images/letsexchange.png';
 import Commonbestrate1 from "./fastestswap components/Commonbestrate";
 import Commonbestrate2 from "./fastestswap components/CommonbestrateTwo";
 import Commonbestrate3 from "./fastestswap components/CommonbestrateThree";
@@ -9,15 +7,25 @@ import Commonbestrate5 from "./fastestswap components/CommonbestrateFive";
 import Commonbestrate6 from "./fastestswap components/CommonbestrateSix";
 import Commonbestrate7 from "./fastestswap components/CommonbestrateSeven";
 import Commonbestrate8 from "./fastestswap components/CommonbestrateEight";
+import Commonbestrate9 from "./fastestswap components/CommonbestrateNine";
+
+
+
 
 export default function FastestSwap(props){
-    const { lockShow, handleComponentToggle } = props;        
+    const { lockShow, handleComponentToggle } = props;    
+    console.log(Commonbestrate1,Commonbestrate2 )
+    console.log(props);
+
     return(
         <>
+       
            {lockShow == 1 ? (
              <div data-v-4860c0fa="">
 
                 <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange3}  bestratetxt={"none"} lockShow={lockShow} />
+
+                <Commonbestrate9 fixedfloatb={props.fixedfloat}  fixedfloatb2={props.fixedfloat3}  bestratetxt={"none"} lockShow={lockShow} fixed={1}/>
  
                 <Commonbestrate1  ratingb={props.rating1} ratingb2={props.rating3} lockShow={lockShow}  />
 
@@ -32,9 +40,12 @@ export default function FastestSwap(props){
             </div>
            ) : (
             <div>
-                
+              
                 <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange2}  bestratetxt={"none"} lockShow={lockShow} />
                 <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange3}  bestratetxt={"none"} lockShow={lockShow} fixed={1}/>
+
+                <Commonbestrate9 fixedfloatb={props.fixedfloat}  fixedfloatb2={props.fixedfloat2}  bestratetxt={"none"} lockShow={lockShow} />
+                <Commonbestrate9 fixedfloatb={props.fixedfloat}  fixedfloatb2={props.fixedfloat3}  bestratetxt={"none"} lockShow={lockShow} fixed={1}/>
 
                 <Commonbestrate1  ratingb={props.rating1} ratingb2={props.rating2} lockShow={lockShow}/>
 

@@ -9,6 +9,8 @@ import Commonbestrate5 from "./fastestswap components/CommonbestrateFive";
 import Commonbestrate6 from "./fastestswap components/CommonbestrateSix";
 import Commonbestrate7 from "./fastestswap components/CommonbestrateSeven";
 import Commonbestrate8 from "./fastestswap components/CommonbestrateEight";
+import Commonbestrate9 from "./fastestswap components/CommonbestrateNine";
+
 
 export default function Bestrating(props){
 
@@ -23,6 +25,8 @@ export default function Bestrating(props){
 
             {lockShow == 1 ? (
                 <div data-v-4860c0fa="">
+
+                    <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange2}  bestratetxt={"none"} lockShow={lockShow} />
                                      
                     <Commonbestrate1  ratingb={props.rating1} ratingb2={props.rating2} lockShow={lockShow} />
 
@@ -34,12 +38,15 @@ export default function Bestrating(props){
 
                     <Commonbestrate2 xolixb={props.xolix} xolixb2={props.xolix2}  bestratetxt={"none"} lockShow={lockShow} />
                                 
-                    <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange2}  bestratetxt={"none"} lockShow={lockShow} />
+                    <Commonbestrate9 fastfloatb={props.fastfloat} fastfloatb2={props.fastfloat2}  bestratetxt={"none"} lockShow={lockShow} />
+
                 
                 </div>
              ) : (
 
                 <div>
+
+                    <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange2}  bestratetxt={"none"} lockShow={lockShow} />
 
                     <Commonbestrate1 name1={props.name} ratingb={props.rating1} ratingb2={props.rating2} lockShow={lockShow} />
 
@@ -55,7 +62,7 @@ export default function Bestrating(props){
 
                     <Commonbestrate2 xolixb={props.xolix} xolixb2={props.xolix2}  bestratetxt={"none"} lockShow={lockShow} />
 
-                    <Commonbestrate8 name1={props.name} letsexchangeb={props.letsexchange} letsexchangeb2={props.letsexchange2}  bestratetxt={"none"} lockShow={lockShow} />
+                    <Commonbestrate9 fastfloatb={props.fastfloat} fastfloatb2={props.fastfloat2}  bestratetxt={"none"} lockShow={lockShow} />
 
                 </div>
 

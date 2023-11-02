@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {Col, Container, Row } from "react-bootstrap";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -19,7 +19,7 @@ import axios from "axios";
 import { Spinner } from "react-bootstrap";
 import { useDispatch } from "react-redux";
 
-import {set_selcur, set_getcur, set_amountcur, set_inputcur,   set_changenow_fixed_rateid, set_changehero_fixed_rateid, set_stealthio_fixed_rateid, set_changelly_fixed_rateid} from "./features/offerSlice.js";
+import {set_selcur, setsendindex, setgetindex,  set_getcur, set_amountcur, set_inputcur,   set_changenow_fixed_rateid, set_changehero_fixed_rateid, set_stealthio_fixed_rateid, set_changelly_fixed_rateid} from "./features/offerSlice.js";
 //end start
 
 const URL = process.env.REACT_APP_URL;
@@ -28,12 +28,23 @@ export default function Viewoffer() {
   const navigate = useNavigate();
 
   const lang = useSelector((state) => state.offer.lang);
-  const sendindex = useSelector((state) => state.offer.sendindex);
-  const getindex = useSelector((state) => state.offer.getindex);
-  const selcur = useSelector((state) => state.offer.selcur);
-  const getcur = useSelector((state) => state.offer.getcur);
+  // const sendindex = useSelector((state) => state.offer.sendindex);
+  // const getindex = useSelector((state) => state.offer.getindex);
+
+  const sendindex = localStorage.getItem("sendindex");
+  const getindex = localStorage.getItem("getindex");
+
+  // const selcur = useSelector((state) => state.offer.selcur);
+  // const getcur = useSelector((state) => state.offer.getcur);
+
+  const selcur = localStorage.getItem("selcur");
+  const getcur = localStorage.getItem("getcur");
+
   const amountcur = useSelector((state) => state.offer.amountcur);
   const getamount = useSelector((state) => state.offer.getamount);
+
+  const [amountErr, setAmountErr] = useState(false);
+  const [amountMin, setAmountMin] = useState('');
 
 
 
@@ -53,6 +64,10 @@ export default function Viewoffer() {
   const [changelly_fixed_EEA, set_changelly_fixed_EEA] = useState("");
   const [changelly_EET, set_changelly_EET] = useState("5-30 min");
 
+  const [fixedfloat_EEA, set_fixedfloat_EEA] = useState("");
+  const [fixedfloat_fixed_EEA, set_fixedfloat_fixed_EEA] = useState("");
+  const [fixedfloat_EET, set_fixedfloat_EET] = useState("4-10 min");
+
   const [simpleswap_EEA, set_simpleswap_EEA] = useState("");
   const [simpleswap_fixed_EEA, set_simpleswap_fixed_EEA] = useState("");
   const [simpleswap_EET, set_simpleswap_EET] = useState("9-50 min");
@@ -69,6 +84,9 @@ export default function Viewoffer() {
   const [xolix_fixed_EEA, set_xolix_fixed_EEA] = useState("");
   const [xolix_EET, set_xolix_EET] = useState("22-46 min");
 
+  const [showPopular1, setShowPopular1]=useState(true);
+  const [showPopular2, setShowPopular2]=useState(true);
+
   var [array, setArray] = useState([]);
   const [lockShow, setlockShow] = useState(0);
 
@@ -79,9 +97,35 @@ export default function Viewoffer() {
 
   //This function contains apis that are called from
   const fetchMultipleData = async (sel, get, amount) => {
-
+    
     try{
      setload(true);
+     setLoading(true);
+
+  //    const url1 = "http://localhost:5002/minamount";
+  
+  //    const options1={
+  //      method: 'POST',
+  //      headers: {
+  //        'Content-Type': 'application/json'
+  //      },
+  //      body: JSON.stringify({sel:sel,get:get,amount:amount})
+  //    }
+
+
+  //  const response1=await fetch(url1,options1);
+  //  console.log(response1)
+   
+  //  const data1=await response1.json();
+  //  console.log(data1)
+  //  const minAmount = data1.minAmount;
+  //  console.log("minimum amount : ",minAmount);
+  //  setAmountMin(minAmount);
+
+    dispatch(set_amountcur(amount))
+    console.log("Amount is greater than minAmount");
+    setAmountErr(false);
+
      const url=URL+"multiplefetch";
      const content={
        method: 'POST',
@@ -92,9 +136,8 @@ export default function Viewoffer() {
      }
      const response=await fetch(url,content);
      const data=await response.json();
+  
      setgval(data.hightprice)
-
-     console.log(data)
 
      if(data.pricearray || load==true){
        setArray(data.pricearray);
@@ -112,6 +155,9 @@ export default function Viewoffer() {
 
        set_changelly_EEA(data.changelly)
        set_changelly_fixed_EEA(data.changelly_fixed)
+
+       set_fixedfloat_EEA(data.fixedfloat)
+       set_fixedfloat_fixed_EEA(data.fixedfloat_fixed)
 
 
        set_simpleswap_EEA(data.simpleswap)
@@ -145,10 +191,11 @@ export default function Viewoffer() {
 
           case "changelly_fixed":
             dispatch(set_changelly_fixed_rateid(value.rateId))
+            setLoading(false);
 
           break;     
           default:
-            console.log("no fixed price")
+            // console.log("no fixed price")
             break;
         }
       });
@@ -157,11 +204,13 @@ export default function Viewoffer() {
      }else{
       setLoading(true)
      }
+    
+
 
     }
      catch (error) {
        // setmsg(error.response6.message);
-       console.log(error)
+      //  console.log(error)
      }
    };
 
@@ -171,10 +220,6 @@ export default function Viewoffer() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-
-  const handleLock = () => {
-    setlockShow(lockShow === 0 ? 1 : 0); // Toggle the state
-  };
 
   // ......................................Redux........................................//
   const dispatch = useDispatch();
@@ -194,7 +239,7 @@ export default function Viewoffer() {
   const [buysenddata, setbuysenddata] = useState(0);
   const [buygetdata, setbuygetdata] = useState(0);
   const [err, setmsg] = useState("");
-  const [sval, setsval] = useState(0.1);
+  const [sval, setsval] = useState(amountcur);
   const [getval, setgval] = useState();
   const [load, setload] = useState(false);
   const [cr, setcr] = useState([]);
@@ -218,18 +263,31 @@ export default function Viewoffer() {
     setexchangesenddata(exchangegetdata);
     setexchangegetdata(exchangevar);
 
+    dispatch(setsendindex(exchangesenddata))
+    dispatch(setgetindex(exchangegetdata))
+
+    localStorage.setItem("sendindex",exchangesenddata)
+    localStorage.setItem("getindex",exchangegetdata)
+
+
     const val1=initval1;
     const val2=initval2;
 
-    console.log("initval1", val1);
-    console.log("initval2", val2);
+    // console.log("initval1", val1);
+    // console.log("initval2", val2);
 
     setinitval1(val2);
     setinitval2(val1);
 
-    console.log("initval1", exchangesenddata);
-    console.log("initval2", exchangegetdata);
+    // console.log("initval1", exchangesenddata);
+    // console.log("initval2", exchangegetdata);
     
+    dispatch(set_selcur(initval2))
+    dispatch(set_getcur(initval1))
+
+    localStorage.setItem("selcur",initval2)
+    localStorage.setItem("getcur",initval1)
+
     setLoading(true)
     fetchMultipleData(initval2, initval1,sval);
 
@@ -245,9 +303,9 @@ export default function Viewoffer() {
     setsearch(e.target.value);
     const searchTerm = e.target.value.toLowerCase();
     const filteredCryptos = cr.filter((crypto) => {
-      const { name, symbol } = crypto;
+      const { symbol2, symbol } = crypto;
       return (
-        name.toLowerCase().includes(searchTerm) ||
+        symbol2.toLowerCase().includes(searchTerm) ||
         symbol.toLowerCase().includes(searchTerm)
       );
     });
@@ -256,9 +314,9 @@ export default function Viewoffer() {
     const partialMatch = [];
 
     filteredCryptos.forEach((crypto) => {
-      const { name, symbol } = crypto;
+      const { symbol2, symbol } = crypto;
       if (
-        name.toLowerCase() === searchTerm ||
+        symbol2.toLowerCase() === searchTerm ||
         symbol.toLowerCase() === searchTerm
       ) {
         exactMatch.push(crypto);
@@ -321,17 +379,26 @@ export default function Viewoffer() {
       cn === "search" ||
       cn === "dropdata" ||
       cn === "usym" ||
+      cn === "usym_img" ||
       cn === "sym" ||
+      cn === "srch_grp_btn" ||
+      cn === "srch_grp_btn2" ||
       cn === "dd"
     ) {
-      console.log("in");
-    } else {
+      
+    }
+    else if(cn==="options 1"|| cn==="unisymbol 1"|| cn==="symbol 1" || cn=="fa-solid fa-chevron-down 1" || cn=="ch 1"){
+      setfiltered([]);
+    }
+    else if(cn==="options 2" || cn==="unisymbol 2"|| cn==="symbol 2" || cn=="fa-solid fa-chevron-down 2"|| cn=="ch 2"){
+      setfiltered1([]);
+    }
+
+    else {
       setshowexchangesenddrop(false);
       setshowexchangegetdrop(false);
       setshowbuysenddrop(false);
       setshowbuygetdrop(false);
-      setfiltered([]);
-      setfiltered1([]);
       setsearch("");
       setsearch1("");
     }
@@ -343,12 +410,30 @@ export default function Viewoffer() {
     );
     if (data) {
       setcr(
-        data.map((coin) => {
-          return { symbol: coin.ticker, name: coin.name, image: coin.image };
-        })
+        data.map((coin,index) => {
+          var string=coin.name
+
+          const index1 = string.indexOf("(");
+          const index2 = string.indexOf(")");
+
+          if(index1>=1){
+          const substring1=string.substring(index1+1, index2);
+          const substring2=string.substring( index1-1, index2+1);
+          const substring3=string.substring( 0, index1);
+         
+          return { coinindex:index, symbol: coin.ticker, name: coin.name, image: coin.image, chainname1:substring1, chainname2:substring2, symbol2:substring3 };
+          }else{
+
+          const substring1=string.substring(index1+1, index2);
+          const substring2=string.substring( index1-1, index2+1);
+          const substring3=string.substring( 0, index1);
+         
+          return { coinindex:index, symbol: coin.ticker, name: coin.name, image: coin.image, chainname1:substring1, chainname2:substring2, symbol2:coin.name };
+          }
+    })
       );
     }
-    console.log(cr);
+    // console.log(cr);
   };
 
   const handleExchange = async (e) => {
@@ -357,8 +442,16 @@ export default function Viewoffer() {
   };
 
   const handleExchangedrop = async (sell, get) => {
+    console.log(cur)
+    console.log(cur1)
     setinitval1(sell)
     setinitval2(get)
+    dispatch(set_selcur(sell))
+    dispatch(set_getcur(get))
+
+    localStorage.setItem("selcur",sell)
+    localStorage.setItem("getcur",get)
+
     fetchMultipleData(sell, get,sval);
   };
 
@@ -366,8 +459,15 @@ export default function Viewoffer() {
 
     //This use effect binds outside clicks
     useEffect(() => {
+      console.log(sendindex)
+      console.log(getindex)
+      console.log("moeed ather")
       getCryptodata();
       document.addEventListener("click", handleClickOutside, true);
+      console.log(initval1)
+      console.log(initval2)
+      console.log(sval)
+
       fetchMultipleData(initval1, initval2,sval);
       }, []);
 
@@ -387,7 +487,7 @@ export default function Viewoffer() {
     let newStr = str.replace(",", ".");
 
     // Use the replace() method to remove the remaining commas, periods, and alphabets from the string
-    newStr = newStr.replace(/[|a-zA-Z]/g, "");
+    newStr = newStr.replace(/[^0-9.]/g, '');
 
     // If there are multiple periods in the string, remove all but the first one
     const index = newStr.indexOf(".");
@@ -395,9 +495,45 @@ export default function Viewoffer() {
       newStr =
         newStr.substring(0, index + 1) +
         newStr.substring(index + 1).replace(".", "");
+        // console.log(newStr);
     }
     return newStr;
   }
+
+
+  function scrollToPopular() {
+    const popularSection = document.getElementById("popularSection");
+    const dropdownContainer = document.querySelector(".dropdown-container");
+    console.log('popular section');
+    if (dropdownContainer && popularSection) {
+      // popularSection.scrollIntoView({ behavior: "smooth" });
+      dropdownContainer.scrollTop = popularSection.offsetTop - dropdownContainer.offsetTop;
+      console.log('scrolling to popular');
+    }
+  }
+
+  function scrollToPopular2() {
+    const popularSection2 = document.getElementById("popularSection2");
+    const dropdownContainer = document.querySelector(".dropdown-container");
+    console.log('popular section');
+    if (dropdownContainer && popularSection2) {
+      // popularSection.scrollIntoView({ behavior: "smooth" });
+      dropdownContainer.scrollTop = popularSection2.offsetTop - dropdownContainer.offsetTop;
+      console.log('scrolling to popular');
+    }
+  }
+
+  const [selectedItem, setSelectedItem] = useState(0);
+  const [selectedItem2, setSelectedItem2] = useState(0);
+
+  const handleItemClick = (index) => {
+    setSelectedItem(index);
+  };
+
+  const handleItemClick2 = (index) => {
+    setSelectedItem2(index);
+  };
+
 
   return (
     <>
@@ -421,7 +557,7 @@ export default function Viewoffer() {
 
 
                 {/* start */}
-                <div className="formContainer" style={{height:"320px"}}>
+      <div className="formContainer formContainer3" style={{height:"320px"}}>
       <div className="tabs">
         <span
           onClick={() => {
@@ -454,6 +590,14 @@ export default function Viewoffer() {
             <span>{lang.yousent}</span>
           </div>
 
+          {amountErr ? (
+            <div className="label mylabel3">
+            <span>Minimum Amount {amountMin}</span>
+          </div>
+          ): (
+            <span></span>
+          )}
+
           <div className="inp">
             {err ? (
               <p style={{ color: "red", fontSize: 10, position: "absolute" }}>
@@ -466,33 +610,32 @@ export default function Viewoffer() {
                   type="text"
                   className="in myin"
                   value={sval}
-                  min={0.1}
+                  // min={0.1}
                   onChange={(e) => {
                     setsval(replaceFirstCommaWithPeriodAndRemoveAlphabets(e.target.value));
                     handleExchange(e.target.value);
-                    setsval(e.target.value)  
                     dispatch(set_inputcur(sval));
                   }}
                 />
 
                 <div
-                  className="options"
+                  className="options 1"
                   onClick={() => setshowexchangesenddrop(true)}
                 >
                   <span>
-                    <span className="unisymbol">
+                    <span className="unisymbol 1">
                       <img
-                        src={`${cur[exchangesenddata]?.image}`}
+                        src={`${cr[exchangesenddata]?.image}`}
                         alt="c"
                         style={{ height: 20, width: 20, marginBottom: 5 }}
                       />
                     </span>
-                    <span className="symbol">
-                      {cur[exchangesenddata]?.symbol.toUpperCase()}
+                    <span className="symbol 1">
+                      {cr[exchangesenddata]?.symbol.toUpperCase()}
                     </span>
                   </span>
-                  <span className="ch">
-                    <i className="fa-solid fa-chevron-down"></i>
+                  <span className="ch 1">
+                    <i className="fa-solid fa-chevron-down 1"></i>
                   </span>
                 </div>
               </>
@@ -507,70 +650,188 @@ export default function Viewoffer() {
                   />
                   <i className="fa-solid fa-search"></i>
                 </div>
-                <div className="dropdata">
-                  {cur?.map((x, index) => (
+
+                {/* Popular group */}
+                <div className="srch_grp">
+                    <ul>
+                      <li 
+                        className="srch_grp_btn" 
+                        style={{cursor:'pointer', color: selectedItem === 0 ? '#996600' : '#fff', borderBottom: selectedItem === 0 ? '2px solid #996600' : 'none'}} 
+                        onClick={() => {scrollToPopular();handleItemClick(0); setShowPopular1(true)}}
+                      >
+                        POPULAR CURRENCIES
+                      </li>
+                      <li 
+                        className="srch_grp_btn2" 
+                        style={{cursor:'pointer',color: selectedItem === 1 ? '#996600' : '#fff', borderBottom: selectedItem === 1 ? '2px solid #996600' : 'none'}} 
+                        onClick={() => {scrollToPopular2();handleItemClick(1);setShowPopular1(false)}}
+                      >
+                        OTHER CURRENCIES
+                      </li>
+                    </ul>
+                </div>
+
+                <div className="dropdata dropdown-container">
+
+                    {/* Popular */}
+                    {
+                  cur?.map((x, index) => (
+                    showPopular1?(x.symbol=="btc"||x.symbol=="eth"||x.symbol=="xmr"||x.symbol=="xrp"||x.symbol=="zec"||x.symbol=="usdttrc20"||x.symbol=="trx"||x.symbol=="bnbbsx"?                    
                     <div
-                      style={{
-                        paddingLeft: 5,
-                        height: 45,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginTop: 4,
-                      }}
-                      data-id={index}
-                      onClick={(e) => {
-                        setexchangesenddata(index);
-                        setshowexchangesenddrop(false);
-                        handleExchangedrop(
-                          cur[index]?.symbol,
-                          cur[exchangegetdata]?.symbol
-                        );
-                      }}
-                      className="dd"
-                    >
-                      <span
                         style={{
+                          paddingLeft: 5,
+                          height: 45,
                           display: "flex",
-                          justifyContent: "center",
                           alignItems: "center",
-                          height: 27,
-                          width: 27,
-                          background: "rgba(255, 255, 255, 0.209)",
-                          borderRadius: 5,
+                          justifyContent: "space-between",
+                          marginTop: 4,
                         }}
-                        className="usym"
-                      >
-                        <img
-                          src={`${x?.image}`}
-                          alt="c"
-                          style={{ height: 17, width: 17 }}
-                        />
-                      </span>
-                      <span
                         data-id={index}
-                        className="sym"
-                        style={{
-                          width: "90%",
-                          fontSize: 13,
-                          lineHeightStep: 0.2,
-                          lineHeight: 1.2,
+                        onClick={(e) => {
+                          console.log("PARENT DIV CLICKED");
+                          setexchangesenddata((x.coinindex));  
+                          console.log(x.coinindex) 
+                          dispatch(setsendindex(x.coinindex))
+
+                          localStorage.setItem("sendindex",x.coinindex)
+
+                          setshowexchangesenddrop(false);
+                          handleExchangedrop(cr[x.coinindex]?.symbol,cr[exchangegetdata]?.symbol);                
+                          
                         }}
+                        className="dd"
+                        id="popularSection2"
                       >
-                        {" "}
-                        {x?.name}
-                        <br />
                         <span
                           style={{
-                            fontSize: 10,
-                            color: "rgba(255, 255, 255, 0.209)",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: 27,
+                            width: 27,
+                            background: "rgba(255, 255, 255, 0.209)",
+                            borderRadius: 5,
+                          }}
+                          className="usym"
+
+                          onClick={(e) => {
+                            console.log("image clicked");
+                            setexchangesenddata((x.coinindex));  
+                            console.log(x.coinindex) 
+                            dispatch(setsendindex(x.coinindex))
+                            localStorage.setItem("sendindex",x.coinindex)
+                            setshowexchangesenddrop(false);
+                            handleExchangedrop(cr[x.coinindex]?.symbol,cr[exchangegetdata]?.symbol);                
+                            
                           }}
                         >
-                          {x?.symbol.toUpperCase()}
+                          <img
+                            src={`${x?.image}`}
+                            alt="c"
+                            style={{ height: 17, width: 17 }}
+                            className="usym_img"
+
+                            onClick={(e) => {
+                              console.log("image clicked");
+                              setexchangesenddata((x.coinindex));  
+                              console.log(x.coinindex) 
+                              dispatch(setsendindex(x.coinindex))
+                              localStorage.setItem("sendindex",x.coinindex)
+                              setshowexchangesenddrop(false);
+                              handleExchangedrop(cr[x.coinindex]?.symbol,cr[exchangegetdata]?.symbol);                
+                              
+                            }}
+                          />
                         </span>
-                      </span>
-                    </div>
+                        <span
+                          data-id={index}
+                          className="sym"
+                          style={{
+                            width: "90%",
+                            fontSize: 13,
+                            lineHeightStep: 0.2,
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {" "}
+                          {x.chainname2?x?.symbol2:x.name}
+                          <span style={{color:"#996600"}}>{x.chainname2?x?.chainname2:""}</span>
+                          <br />
+                          <span
+                            style={{
+                              fontSize: 10,
+                              color: "rgba(255, 255, 255, 0.209)",
+                            }}
+                          >
+                            {x?.chainname1=="Binance Smart Chain"?"BEP20 "+x?.symbol.toUpperCase():x?.symbol.toUpperCase()}
+                          </span>
+                        </span>
+                      </div>:<div></div>):                  
+                      <div
+                        style={{
+                          paddingLeft: 5,
+                          height: 45,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          marginTop: 4,
+                        }}
+                        data-id={index}
+                        onClick={(e) => {
+                          setexchangesenddata(x.coinindex); 
+                          console.log(x.coinindex)                   
+                          dispatch(setsendindex(x.coinindex))
+                          localStorage.setItem("sendindex",x.coinindex)
+                          setshowexchangesenddrop(false);
+                          handleExchangedrop(cr[x.coinindex]?.symbol,cr[exchangegetdata]?.symbol);
+                        }}
+                        className="dd"
+                        id="popularSection2"
+                      >
+                        <span
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: 27,
+                            width: 27,
+                            background: "rgba(255, 255, 255, 0.209)",
+                            borderRadius: 5,
+                          }}
+                          className="usym"
+                        >
+                          <img
+                            src={`${x?.image}`}
+                            alt="c"
+                            style={{ height: 17, width: 17 }}
+                          />
+                        </span>
+                        <span
+                          data-id={index}
+                          className="sym"
+                          style={{
+                            width: "90%",
+                            fontSize: 13,
+                            lineHeightStep: 0.2,
+                            lineHeight: 1.2,
+                          }}
+                        >
+                          {" "}
+                          {x.chainname2?x?.symbol2:x.name}
+                          <span style={{color:"#996600"}}>{x.chainname2?x?.chainname2:""}</span>
+                          <br />
+                          <span
+                            style={{
+                              fontSize: 10,
+                              color: "rgba(255, 255, 255, 0.209)",
+                            }}
+                          >
+                            {x?.chainname1=="Binance Smart Chain"?"BEP20 "+x?.symbol.toUpperCase():x?.symbol.toUpperCase()}
+                          </span>
+                        </span>
+                      </div>
                   ))}
+
                 </div>
               </div>
             )}
@@ -585,14 +846,14 @@ export default function Viewoffer() {
                 {lang.noextrafees}
               </li>
               <li
-                style={{ fontSize: " 12px", color: "grey", width:"350px" }}
+                style={{ fontSize: " 12px", color: "#996600", width:"350px" }}
                 className="mb-3 ms-2"
               >
                 {lang.estimated} :
                 <span>
                   {" "}
-                  {sval} {cur[exchangesenddata]?.symbol.toUpperCase()} ~{" "}
-                  {getval} {cur[exchangegetdata]?.symbol.toUpperCase()}{" "}
+                  {1} {cr[exchangesenddata]?.symbol.toUpperCase()} ~{" "}
+                  {(getval/sval).toFixed(8)=="Infinity" || (getval/sval).toFixed(8)=="NaN"?0:(getval/sval).toFixed(8)} {cr[exchangegetdata]?.symbol.toUpperCase()}{" "}
                 </span>
               </li>
             </div>
@@ -600,7 +861,52 @@ export default function Viewoffer() {
               <button
                 className="ms-auto new-stepper-button-swap new-stepper-button-swap_dark"
                 type="button"
-                onClick={changeInput}
+                onClick={()=>{
+                  var sendindex1 = null;
+                  var getindex1 = exchangegetdata;
+                  var exchangevar =null;
+
+                  //Swap variables
+                  exchangevar = exchangesenddata;
+                  sendindex1=getindex1;
+                  getindex1=exchangevar;
+
+                  setexchangesenddata(exchangegetdata);
+                  setexchangegetdata(exchangevar);
+
+                  //Setting send index for swap page page
+                  dispatch(setsendindex(sendindex1))
+                  dispatch(setgetindex(getindex1))
+
+                  localStorage.setItem("sendindex",sendindex1)
+                  localStorage.setItem("getindex",getindex1)
+             
+                  const val1=initval1;
+                  const val2=initval2;
+              
+                  // console.log("initval1", val1);
+                  // console.log("initval2", val2);
+              
+                  setinitval1(val2);
+                  setinitval2(val1);
+              
+                  console.log("send index", sendindex1);
+                  console.log("get index", getindex1);
+              
+                  dispatch(set_selcur(initval2))
+                  dispatch(set_getcur(initval1))
+
+                  localStorage.setItem("selcur", initval2)
+                  localStorage.setItem("getcur", initval1)
+
+                  fetchMultipleData(initval2, initval1,sval);
+              
+                  if (counterchange == false) {
+                    setcounterchange(true);
+                  } else {
+                    setcounterchange(false);
+                  }
+                }}
               >
                 <svg
                   className="switch-btn"
@@ -644,23 +950,23 @@ export default function Viewoffer() {
                   />
                 )}
                 <div
-                  className="options"
+                  className="options 2"
                   onClick={() => setshowexchangegetdrop(true)}
                 >
                   <span>
-                    <span className="unisymbol">
+                    <span className="unisymbol 2">
                       <img
-                        src={`${cur1[exchangegetdata]?.image}`}
+                        src={`${cr[exchangegetdata]?.image}`}
                         alt="c"
                         style={{ height: 20, width: 20, marginBottom: 5 }}
                       />
                     </span>
-                    <span className="symbol">
-                      {cur1[exchangegetdata]?.symbol.toUpperCase()}
+                    <span className="symbol 2">
+                      {cr[exchangegetdata]?.symbol.toUpperCase()}
                     </span>
                   </span>
-                  <span className="ch">
-                    <i className="fa-solid fa-chevron-down"></i>
+                  <span className="ch 2">
+                    <i className="fa-solid fa-chevron-down 2"></i>
                   </span>
                 </div>
               </>
@@ -675,70 +981,168 @@ export default function Viewoffer() {
                   />
                   <i className="fa-solid fa-search"></i>
                 </div>
-                <div className="dropdata">
-                  {cur1?.map((x, index) => (
-                    <div
-                      style={{
-                        paddingLeft: 5,
-                        height: 45,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        marginTop: 4,
-                      }}
-                      data-id={index}
-                      onClick={(e) => {
-                        setexchangegetdata(index);
-                        setshowexchangegetdrop(false);
-                        handleExchangedrop(
-                          cur1[exchangesenddata]?.symbol,
-                          cur1[index]?.symbol
-                        );
-                      }}
-                      className="dd"
-                    >
-                      <span
-                        style={{
-                          display: "flex",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          height: 27,
-                          width: 27,
-                          background: "rgba(255, 255, 255, 0.209)",
-                          borderRadius: 5,
-                        }}
-                        className="usym"
+
+                {/* Popular group */}
+                <div className="srch_grp">
+                    <ul>
+                      <li 
+                        className="srch_grp_btn" 
+                        style={{cursor:'pointer', color: selectedItem2 === 0 ? '#996600' : '#fff', borderBottom: selectedItem2 === 0 ? '2px solid #996600' : 'none'}}
+                        onClick={() => {scrollToPopular();handleItemClick2(0);setShowPopular1(true)}}
                       >
-                        <img
-                          src={`${x?.image}`}
-                          alt="c"
-                          style={{ height: 17, width: 17 }}
-                        />
-                      </span>
-                      <span
-                        data-id={index}
-                        className="sym"
-                        style={{
-                          width: "90%",
-                          fontSize: 13,
-                          lineHeightStep: 0.2,
-                          lineHeight: 1.2,
-                        }}
+                        POPULAR CURRENCIES
+                      </li>
+                      <li 
+                        className="srch_grp_btn2" 
+                        style={{cursor:'pointer', color: selectedItem2 === 1 ? '#996600' : '#fff', borderBottom: selectedItem2 === 1 ? '2px solid #996600' : 'none'}}
+                        onClick={() => {scrollToPopular2();handleItemClick2(1);setShowPopular1(false)}}
                       >
-                        {" "}
-                        {x?.name}
-                        <br />
-                        <span
-                          style={{
-                            fontSize: 10,
-                            color: "rgba(255, 255, 255, 0.209)",
-                          }}
-                        >
-                          {x?.symbol.toUpperCase()}
-                        </span>
-                      </span>
-                    </div>
+                        OTHER CURRENCIES
+                      </li>
+                    </ul>
+                </div>
+
+                <div className="dropdata dropdown-container">
+
+                  {/* Popular */}
+
+                  {
+                  cur1?.map((x, index) => (
+                    showPopular2?(x.symbol=="btc"||x.symbol=="eth"||x.symbol=="xmr"||x.symbol=="xrp"||x.symbol=="zec"||x.symbol=="usdttrc20"||x.symbol=="trx"||x.symbol=="bnbbsx"?                    
+//second2
+<div
+style={{
+  paddingLeft: 5,
+  height: 45,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginTop: 4,
+}}
+data-id={index}
+onClick={(e) => {
+  setexchangegetdata(x.coinindex);
+  dispatch(setgetindex(x.coinindex))
+  localStorage.setItem("getindex", x.coinindex)
+  setshowexchangegetdrop(false);
+  handleExchangedrop(cr[exchangesenddata]?.symbol,cr[x.coinindex]?.symbol);
+}}
+className="dd"
+id="popularSection2"
+>
+<span
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 27,
+    width: 27,
+    background: "rgba(255, 255, 255, 0.209)",
+    borderRadius: 5,
+  }}
+  className="usym"
+>
+  <img
+    src={`${x?.image}`}
+    alt="c"
+    style={{ height: 17, width: 17 }}
+  />
+</span>
+<span
+  data-id={index}
+  className="sym"
+  style={{
+    width: "90%",
+    fontSize: 13,
+    lineHeightStep: 0.2,
+    lineHeight: 1.2,
+  }}
+>
+  {" "}
+  {x.chainname2?x?.symbol2:x.name}
+  <span style={{color:"#996600"}}>{x.chainname2?x?.chainname2:""}</span>
+  <br />
+  <span
+    style={{
+      fontSize: 10,
+      color: "rgba(255, 255, 255, 0.209)",
+    }}
+  >
+    {x?.chainname1=="Binance Smart Chain"?"BEP20 "+x?.symbol.toUpperCase():x?.symbol.toUpperCase()}
+  </span>
+</span>
+</div>
+:<div></div>):
+
+//second2
+<div
+style={{
+  paddingLeft: 5,
+  height: 45,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  marginTop: 4,
+}}
+data-id={index}
+onClick={(e) => {
+  setexchangegetdata(x.coinindex);
+  dispatch(setgetindex(x.coinindex))
+  localStorage.setItem("getindex", x.coinindex)
+  setshowexchangegetdrop(false);
+  console.log(x)
+  handleExchangedrop(cr[exchangesenddata]?.symbol,cr[x.coinindex]?.symbol);
+}}
+className="dd"
+id="popularSection2"
+>
+<span
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: 27,
+    width: 27,
+    background: "rgba(255, 255, 255, 0.209)",
+    borderRadius: 5,
+  }}
+  className="usym"
+>
+  <img
+    src={`${x?.image}`}
+    alt="c"
+    style={{ height: 17, width: 17 }}
+  />
+</span>
+<span
+  data-id={index}
+  className="sym"
+  style={{
+    width: "90%",
+    fontSize: 13,
+    lineHeightStep: 0.2,
+    lineHeight: 1.2,
+  }}
+>
+  {" "}
+  {x.chainname2?x?.symbol2:x.name}
+  <span style={{color:"#996600"}}>{x.chainname2?x?.chainname2:""}</span>
+  {/* {x?.name} */}
+  <br />
+  <span
+    style={{
+      fontSize: 10,
+      color: "rgba(255, 255, 255, 0.209)",
+    }}
+  >
+    {x?.chainname1=="Binance Smart Chain"?"BEP20 "+x?.symbol.toUpperCase():x?.symbol.toUpperCase()}
+    {/* {x?.symbol.toUpperCase()} */}
+  </span>
+</span>
+</div>
                   ))}
+
+
                 </div>
               </div>
             )}
@@ -918,7 +1322,7 @@ export default function Viewoffer() {
               <div
                 className="d-flex mt-3 mb-3"
                 style={{ paddingTop: "400px" }}
-                onClick={handleLock}
+                
               >
                 <div className="d-flex text-white">
                   Fixed rate mode
@@ -927,9 +1331,10 @@ export default function Viewoffer() {
                     style={{ display: lockShow === 1 ? "block" : "none" }}
                   >
                     <FontAwesomeIcon
-                      className="dd1"
+                      className="dd1 fixed_lock"
                       icon={faLock}
                       style={{ color: "#f4f7fa" }}
+                      onClick={()=>{setlockShow(lockShow === 0 ? 1 : 0);}}
                     />
                   </div>
                   <div
@@ -940,6 +1345,7 @@ export default function Viewoffer() {
                       className="dd1"
                       icon={faUnlock}
                       style={{ color: "#f4f7fa" }}
+                      onClick={()=>{setlockShow(lockShow === 0 ? 1 : 0);}}
                     />
                   </div>
                 </div>
@@ -947,16 +1353,12 @@ export default function Viewoffer() {
 
               <div className="text-white">
                 <p className="fixedRateMode">
-                  Coinoswap provides an option for fixed rates as well as
-                  floating rates. To select and activate fixed rate mode click
-                  on the lock inside the exchange crypto box. Fixed rate mode
-                  guarantees you recieve the agreed amount regardless of rate
-                  fluctuations
+                Coinoswap provides an option for fixed rates as well as floating rates. To select and activate fixed rate mode click on the lock above. Fixed rate mode guarantees you receive the agreed amount regardless of rate fluctuations
                 </p>
               </div>
             </Col>
 
-            <Col sm={12} lg={7}>
+            <Col sm={12} lg={7} className="exchanges">
               <p className="selectam selectam2 mt-2">
                 2. {lang.selectexchange}
               </p>
@@ -994,6 +1396,7 @@ export default function Viewoffer() {
                   </div>
                 </div>
               ) : (
+                <>
                 <Tabs className="navs" defaultActiveKey="first">
                   <Tab
                     className="navs1"
@@ -1020,8 +1423,9 @@ export default function Viewoffer() {
                       letsexchange={letsexchange_EET}
                       letsexchange2={letsexchange_EEA}
                       lockShow={lockShow}
-
                     />
+
+
                   </Tab>
 
                   <Tab eventKey="second" title={lang.sortbyeta}>
@@ -1035,6 +1439,10 @@ export default function Viewoffer() {
                       xolix={xolix_EET}
                       xolix2={xolix_EEA}
                       xolix3={xolix_fixed_EEA}
+
+                      fixedfloat={fixedfloat_EET}
+                      fixedfloat2={fixedfloat_EEA}
+                      fixedfloat3={fixedfloat_fixed_EEA}
 
                       changehero={changehero_EET}
                       changehero2={changehero_EEA}
@@ -1070,6 +1478,8 @@ export default function Viewoffer() {
                       name={"best rating"}
                       rating1={changelly_EET}
                       rating2={changelly_EEA}
+                      fixedfloat={fixedfloat_EET}
+                      fixedfloat2={fixedfloat_EEA}
                       xolix={xolix_EET}
                       xolix2={xolix_EEA}
                       changehero={changehero_EET}
@@ -1088,7 +1498,16 @@ export default function Viewoffer() {
                     />
                   </Tab>
                 </Tabs>
+                
+             </>
               )}
+              <div className="p-3" style={{display: getval == 0 ? 'block':'none'}}>
+                  <div className="no_offers p-3">
+                    <p style={{color:'#fff',fontSize:'16px',fontWeight:'600'}}>No Offers Found!</p>
+                    <p className="pb-0 mb-0" style={{color:'#BE980B',fontSize:'13px',fontWeight:'500'}}>You sent amount is below threshold equivalent to $5 USD</p>
+                    <p className="pb-0 mb-0" style={{color:'#BE980B',fontSize:'13px',fontWeight:'500'}}>Try changing the pair if send amount is correct</p>
+                  </div>
+                </div>
             </Col>
           </Row>
         </Container>
